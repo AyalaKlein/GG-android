@@ -9,4 +9,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="game_name">game_name</string>
+    <string name="new_name">new_name</string>
+    <string name="new_desc">new_desc</string>
+    <string name="game_desc">game_desc</string>
+    <string name="new_score">new_score</string>
+    <string name="game_score">game_score</string>
+    <string name="new_genre">new_genre</string>
+    <string name="game_genre">game_genre</string>
 </resources>

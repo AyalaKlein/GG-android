@@ -4,6 +4,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateNewGame">
+    tools:context=".CreateNewGame"
+    tools:ignore="ContentDescription,MissingConstraints">
 
+    <ImageView
+        android:id="@+id/new_image"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        app:srcCompat="@android:drawable/picture_frame"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="90dp" />
+
+    <TextView
+        android:id="@+id/new_name"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/new_name"
+        tools:layout_editor_absoluteX="220dp"
+        tools:layout_editor_absoluteY="30dp" />
+
+    <TextView
+        android:id="@+id/game_score"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_score"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="390dp" />
+
+    <TextView
+        android:id="@+id/new_score"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/new_score"
+        tools:layout_editor_absoluteX="220dp"
+        tools:layout_editor_absoluteY="390dp" />
+
+    <TextView
+        android:id="@+id/game_desc"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_desc"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="450dp" />
+
+    <TextView
+        android:id="@+id/new_desc"
+        android:layout_width="310dp"
+        android:layout_height="100dp"
+        android:text="@string/new_desc"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="510dp" />
+
+    <TextView
+        android:id="@+id/game_genre"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_genre"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="330dp" />
+
+    <TextView
+        android:id="@+id/new_genre"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/new_genre"
+        tools:layout_editor_absoluteX="220dp"
+        tools:layout_editor_absoluteY="330dp"/>
+
+    <TextView
+        android:id="@+id/game_name"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_name"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="30dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
