@@ -18,13 +18,14 @@ import android.widget.Toast
 import com.example.gg.MainActivity
 
 import com.example.gg.R
+import com.example.gg.data.Result
+import com.example.gg.data.model.LoggedInUser
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,23 +35,9 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
+        val register = findViewById<Button>(R.id.register)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
-        auth = FirebaseAuth.getInstance()
-        auth.createUserWithEmailAndPassword(username.toString(), password.toString()).addOnCompleteListener(this, OnCompleteListener{ task ->
-            if(task.isSuccessful){
-                Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }else {
-                Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show()
-            }
-        })
-
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
         loginViewModel  = ViewModelProviders.of(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
 
@@ -59,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
+            register.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
@@ -99,24 +87,44 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
 
+            fun loginUser() {
+                loginViewModel.login(username = username.text.toString(), password = password.text.toString()) { result ->
+                    if (result is Result.Success) {
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+
+            fun registerUser() {
+                loginViewModel.register(username = username.text.toString(), password = password.text.toString()) { result ->
+                    if (result is Result.Success) {
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                                username.text.toString(),
-                                password.text.toString()
-                        )
+                        loginUser()
                 }
                 false
             }
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginUser()
+            }
+
+            register.setOnClickListener {
+                loading.visibility = View.VISIBLE
+                registerUser()
             }
         }
-
-
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
