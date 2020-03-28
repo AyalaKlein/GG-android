@@ -1,12 +1,13 @@
-package com.example.gg
+package com.example.gg.ui.editGame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.gg.R
 
-class GameDetails : AppCompatActivity() {
+class EditGame : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game_details)
+        setContentView(R.layout.activity_edit_game)
     }
 }

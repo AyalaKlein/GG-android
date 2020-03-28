@@ -8,6 +8,7 @@ import com.example.gg.data.LoginRepository
 import com.example.gg.data.Result
 
 import com.example.gg.R
+import com.example.gg.data.model.LoggedInUser
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -17,15 +18,28 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String, callback: (Result<LoggedInUser>) -> Unit) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        loginRepository.login(username, password) { result ->
+            if (result is Result.Success) {
+                _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+            } else {
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
 
-        if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+            callback(result)
+        }
+    }
 
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+    fun register(username: String, password: String, callback: (Result<LoggedInUser>) -> Unit) {
+        loginRepository.register(username, password) { result ->
+            if (result is Result.Success) {
+                _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+            } else {
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
+
+            callback(result)
         }
     }
 

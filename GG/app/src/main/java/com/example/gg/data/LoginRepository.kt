@@ -1,5 +1,6 @@
 package com.example.gg.data
 
+import com.example.gg.data.dataSource.LoginDataSource
 import com.example.gg.data.model.LoggedInUser
 
 /**
@@ -27,15 +28,24 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        // handle login
-        val result = dataSource.login(username, password)
+    fun login(username: String, password: String, callback: (Result<LoggedInUser>) -> Unit) {
+        dataSource.login(username, password) { result ->
+            if (result is Result.Success) {
+                setLoggedInUser(result.data)
+            }
 
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
+            callback(result)
         }
+    }
 
-        return result
+    fun register(username: String, password: String, callback: (Result<LoggedInUser>) -> Unit) {
+        dataSource.register(username, password) { result ->
+            if (result is Result.Success) {
+                setLoggedInUser(result.data)
+            }
+
+            callback(result)
+        }
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
