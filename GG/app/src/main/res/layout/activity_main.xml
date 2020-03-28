@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.MainActivity"
+    tools:ignore="ContentDescription,MissingConstraints">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,5 +31,9 @@
         android:layout_margin="@dimen/fab_margin"
         app:maxImageSize="40dp"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="61dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
