@@ -5,18 +5,24 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class GameDataSource constructor() {
+class GameDataSource constructor(val callback: (Unit) -> Unit) {
 
     private var _db: DatabaseReference? = null
     private val _tableName: String = "Games"
 
     private var _games: MutableList<Game>
 
+    init {
+        _db  = Firebase.database.reference
+        _games = mutableListOf()
+    }
+
     private fun initGameList() {
         val gameListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 _games.clear()
                 dataSnapshot.children.mapNotNullTo(_games) { it.getValue<Game>(Game::class.java) }
+                callback(Unit)
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
@@ -26,8 +32,6 @@ class GameDataSource constructor() {
     }
 
     init {
-        _db  = Firebase.database.reference
-        _games = mutableListOf()
         initGameList()
     }
 
