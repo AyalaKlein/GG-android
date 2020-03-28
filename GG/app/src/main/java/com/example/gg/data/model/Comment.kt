@@ -1,4 +1,8 @@
 package com.example.gg.data.model
 
-class Comment {
-}
+data class Comment(
+    val id: String,
+    val gameId: String,
+    val text: String,
+    val userId: String
+)

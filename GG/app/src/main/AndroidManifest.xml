@@ -9,10 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditGame"></activity>
-        <activity android:name=".GameDetails" />
-        <activity android:name=".CreateNewGame" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.newGame.CreateNewGame"></activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.editGame.EditGame" />
+        <activity android:name=".ui.gameDetails.GameDetails" />
+        <activity android:name=".CreateNewGame" /> <!-- <activity android:name=".MainActivity" /> -->
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name">

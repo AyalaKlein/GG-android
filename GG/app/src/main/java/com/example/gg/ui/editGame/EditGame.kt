@@ -1,7 +1,8 @@
-package com.example.gg
+package com.example.gg.ui.editGame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.gg.R
 
 class EditGame : AppCompatActivity() {
 

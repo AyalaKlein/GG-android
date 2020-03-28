@@ -1,5 +1,6 @@
-package com.example.gg.data
+package com.example.gg.data.dataSource
 
+import com.example.gg.data.Result
 import com.example.gg.data.model.LoggedInUser
 import com.google.firebase.auth.FirebaseAuth
 import java.io.IOException
@@ -14,9 +15,20 @@ class LoginDataSource {
         auth.signInWithEmailAndPassword(username, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    callback(Result.Success<LoggedInUser>(LoggedInUser(auth.currentUser!!.uid, username)))
+                    callback(
+                        Result.Success<LoggedInUser>(
+                            LoggedInUser(auth.currentUser!!.uid, username)
+                        )
+                    )
                 } else {
-                    callback(Result.Error(IOException("Failed to login user", task.exception)))
+                    callback(
+                        Result.Error(
+                            IOException(
+                                "Failed to login user",
+                                task.exception
+                            )
+                        )
+                    )
                 }
             }
     }
@@ -25,9 +37,20 @@ class LoginDataSource {
         auth.createUserWithEmailAndPassword(username, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    callback(Result.Success<LoggedInUser>(LoggedInUser(auth.currentUser!!.uid, username)))
+                    callback(
+                        Result.Success<LoggedInUser>(
+                            LoggedInUser(auth.currentUser!!.uid, username)
+                        )
+                    )
                 } else {
-                    callback(Result.Error(IOException("Failed to register user", task.exception)))
+                    callback(
+                        Result.Error(
+                            IOException(
+                                "Failed to register user",
+                                task.exception
+                            )
+                        )
+                    )
                 }
             }
     }

@@ -2,7 +2,7 @@ package com.example.gg.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gg.data.LoginDataSource
+import com.example.gg.data.dataSource.LoginDataSource
 import com.example.gg.data.LoginRepository
 
 /**

@@ -15,13 +15,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.example.gg.MainActivity
+//import com.example.gg.MainActivity
 
 import com.example.gg.R
 import com.example.gg.data.Result
-import com.example.gg.data.model.LoggedInUser
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
+import com.example.gg.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
