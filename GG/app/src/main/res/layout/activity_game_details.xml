@@ -4,6 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.gameDetails.GameDetails">
+    tools:context=".ui.gameDetails.GameDetails"
+    tools:ignore="ContentDescription,MissingConstraints">
 
+<ImageView
+    android:id="@+id/new_image"
+    android:layout_width="220dp"
+    android:layout_height="220dp"
+    app:srcCompat="@android:drawable/picture_frame"
+    tools:layout_editor_absoluteX="1dp"
+    tools:layout_editor_absoluteY="90dp" />
+
+<TextView
+    android:id="@+id/new_name"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.772"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.594" />
+
+<TextView
+    android:id="@+id/game__score"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    android:text="@string/game_score"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.115"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.594" />
+
+<TextView
+    android:id="@+id/new_score"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.772"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.513" />
+
+<TextView
+    android:id="@+id/game__desc"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    android:text="@string/game_desc"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.115"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.678" />
+
+<TextView
+    android:id="@+id/new_desc"
+    android:layout_width="310dp"
+    android:layout_height="100dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.326"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.852" />
+
+<TextView
+    android:id="@+id/game__genre"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    android:text="@string/game_genre"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.115"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.513" />
+
+<TextView
+    android:id="@+id/new_genre"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.772"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.043" />
+
+<TextView
+    android:id="@+id/game__name"
+    android:layout_width="125dp"
+    android:layout_height="40dp"
+    android:text="@string/game_name"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.115"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.044" />
 </androidx.constraintlayout.widget.ConstraintLayout>
