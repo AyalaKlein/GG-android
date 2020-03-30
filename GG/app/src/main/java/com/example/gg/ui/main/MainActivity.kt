@@ -8,15 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Toast
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.example.gg.R
 import com.example.gg.data.model.Game
 import com.example.gg.ui.gameDetails.GameDetails
 import com.example.gg.ui.newGame.CreateNewGame
 import kotlinx.android.synthetic.main.activity_game.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
 
 
 @Suppress("DEPRECATION")
@@ -35,9 +38,10 @@ class MainActivity : AppCompatActivity() {
                 gamesList.add(it)
             }
 
-            adapter = GameAdapter(this, gamesList)
+            adapter = GameAdapter(this, gamesList, mainViewModel)
 
             gvGames.adapter = adapter
+            findViewById<ProgressBar>(R.id.gamesLoading).visibility = View.GONE
         }
 
         mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory {
@@ -56,10 +60,12 @@ class MainActivity : AppCompatActivity() {
     class GameAdapter : BaseAdapter {
         var gameList = ArrayList<Game>()
         var context: Context? = null
+        var imageRetriever: ImageRetriever? = null
 
-        constructor(context: Context, gameList: ArrayList<Game>) : super() {
+        constructor(context: Context, gameList: ArrayList<Game>, imageRetriever: ImageRetriever) : super() {
             this.context = context
             this.gameList = gameList
+            this.imageRetriever = imageRetriever
         }
 
         override fun getCount(): Int {
@@ -79,7 +85,18 @@ class MainActivity : AppCompatActivity() {
 
             var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var gameView = inflator.inflate(R.layout.activity_game, null)
-            gameView.imgFood.setImageResource(R.drawable.ic_launcher_background!!)
+
+            imageRetriever!!.getImageUrl(game.id).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Glide
+                        .with(context!!)
+                        .load(it.result!!)
+                        .into(gameView.imgFood)
+                } else {
+                    gameView.imgFood.setImageResource(R.drawable.ic_launcher_background!!)
+                }
+            }
+
             gameView.tvName.text = game.name!!
             gameView.setOnClickListener { v ->
                 context!!.startActivity(Intent(context,GameDetails::class.java))
@@ -88,5 +105,4 @@ class MainActivity : AppCompatActivity() {
             return gameView
         }
     }
-
 }

@@ -1,28 +1,29 @@
 package com.example.gg.ui.newGame
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
-import com.example.gg.data.model.Game
-import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.gg.ui.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_new_game.*
+import java.io.ByteArrayOutputStream
 
 class CreateNewGame : AppCompatActivity() {
 
-    private lateinit var database: DatabaseReference
+    private lateinit var newGameViewModel: NewGameViewModel
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_game)
-        database = Firebase.database.reference
+
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
 
         save_game.setOnClickListener {
-
             val aa = game_genre.editText
             writeNewGame(game_genre.editText?.text.toString(), game_name.editText?.text.toString(), game_score.editText?.text.toString().toInt(), game_desc.editText?.text.toString())
         }
@@ -45,17 +46,25 @@ class CreateNewGame : AppCompatActivity() {
         game_image.setImageURI(data?.data)
     }
 
+    private fun getSelectedImageByteArray(): ByteArray {
+        game_image.isDrawingCacheEnabled = true
+        game_image.buildDrawingCache()
+        val bitmap = (game_image.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+        return baos.toByteArray()
+    }
+
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
-        val key = database.child("Games").push().key
-
-        val game = key?.let { Game(it, genre, name, score, description) }
-        val gameValues = game?.toMap()
-
-        val childUpdates = HashMap<String, Any>()
-        if(!gameValues.isNullOrEmpty()) {
-            childUpdates["/Games/$key"] = gameValues
+        newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid).addOnCompleteListener {
+            newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray()).addOnSuccessListener {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }.addOnFailureListener {
+            // error not good
         }
-
-        database.updateChildren(childUpdates)
     }
 }
