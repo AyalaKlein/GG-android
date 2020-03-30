@@ -9,7 +9,7 @@ data class Game(
     val score: Int = -1,
     val description: String = "",
     val userId: String = "",
-    val comments: List<Comment>? = null
+    val comments: List<Comment>? = ArrayList<Comment>()
 ) {
     @Exclude
     fun toMap(): Map<String, Any?> {

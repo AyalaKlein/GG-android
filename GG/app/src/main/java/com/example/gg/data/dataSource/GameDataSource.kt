@@ -5,16 +5,21 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storage
 
 class GameDataSource(val callback: ((Unit) -> Unit)?) {
 
     private var _db: DatabaseReference? = null
+    private var _storage: StorageReference? = null
     private val _tableName: String = "Games"
 
     private var _games: MutableList<Game>
 
     init {
         _db  = Firebase.database.reference
+        _storage = Firebase.storage.reference
         _games = mutableListOf()
     }
 
@@ -40,10 +45,10 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         return this._games
     }
 
-    fun createGame(genre: String, name: String, score: Int, description: String): Task<Void> {
+    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<Void> {
         val key = _db!!.child("Games").push().key
 
-        val game = key?.let { Game(it, genre, name, score, description) }
+        val game = key?.let { Game(it, genre, name, score, description, uid) }
         val gameValues = game?.toMap()
 
         val childUpdates = HashMap<String, Any>()
@@ -52,5 +57,10 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         }
 
         return _db!!.updateChildren(childUpdates)
+    }
+
+    fun saveImage(uid: String, data: ByteArray): UploadTask {
+        var imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
+        return imageRef!!.putBytes(data)
     }
 }
