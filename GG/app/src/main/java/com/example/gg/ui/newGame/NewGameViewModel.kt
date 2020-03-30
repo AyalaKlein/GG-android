@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
 
 class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() {
-    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<Void> {
+    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
         return gameRepository.createGame(genre, name, score, description, uid)
     }
 

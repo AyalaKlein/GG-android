@@ -11,7 +11,7 @@ class GameRepository(private val dataSource: GameDataSource) {
         return dataSource.getGames()
     }
 
-    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<Void> {
+    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
         return dataSource.createGame(genre, name, score, description, uid)
     }
 

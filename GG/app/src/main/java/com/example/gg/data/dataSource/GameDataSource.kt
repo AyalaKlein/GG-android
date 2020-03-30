@@ -1,6 +1,7 @@
 package com.example.gg.data.dataSource
 
 import com.example.gg.data.model.Game
+import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -45,7 +46,7 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         return this._games
     }
 
-    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<Void> {
+    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
         val key = _db!!.child("Games").push().key
 
         val game = key?.let { Game(it, genre, name, score, description, uid) }
@@ -56,7 +57,9 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
             childUpdates["/Games/$key"] = gameValues
         }
 
-        return _db!!.updateChildren(childUpdates)
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+            return@Continuation key
+        })
     }
 
     fun saveImage(uid: String, data: ByteArray): UploadTask {

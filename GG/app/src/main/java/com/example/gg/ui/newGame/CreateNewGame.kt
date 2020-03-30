@@ -57,8 +57,8 @@ class CreateNewGame : AppCompatActivity() {
     }
 
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
-        newGameViewModel.saveImage(auth.currentUser!!.uid, getSelectedImageByteArray()).addOnSuccessListener {
-            newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid).addOnCompleteListener {
+        newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid).addOnCompleteListener {
+            newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray()).addOnSuccessListener {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
                 finish()
