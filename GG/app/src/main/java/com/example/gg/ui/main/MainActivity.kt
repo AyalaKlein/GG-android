@@ -2,6 +2,8 @@ package com.example.gg.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory {
             games = mainViewModel.getGames()
+            findViewById<ProgressBar>(R.id.gamesLoading).visibility = View.GONE
         }).get(MainViewModel::class.java)
 
         fab.setOnClickListener { view ->
