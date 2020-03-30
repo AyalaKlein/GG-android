@@ -1,5 +1,6 @@
 package com.example.gg.data
 
+import android.net.Uri
 import com.example.gg.data.dataSource.GameDataSource
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Task
@@ -17,5 +18,9 @@ class GameRepository(private val dataSource: GameDataSource) {
 
     fun saveImage(uid: String, data: ByteArray): UploadTask {
         return dataSource.saveImage(uid, data)
+    }
+
+    fun getImageUrl(uid: String): Task<Uri> {
+        return dataSource.getImageUrl(uid)
     }
 }

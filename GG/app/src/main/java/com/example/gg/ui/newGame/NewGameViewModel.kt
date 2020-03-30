@@ -2,7 +2,6 @@ package com.example.gg.ui.newGame
 
 import androidx.lifecycle.ViewModel
 import com.example.gg.data.GameRepository
-import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
 
