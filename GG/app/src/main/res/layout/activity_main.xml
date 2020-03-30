@@ -21,7 +21,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <GridView
+        android:id="@+id/gvGames"
+        android:layout_width="400dp"
+        android:layout_height="449dp"
+        android:layout_gravity="center"
+        android:columnWidth="150dp"
+        android:horizontalSpacing="15dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="15dp">
+
+        <include layout="@layout/content_main" />
+    </GridView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -31,11 +42,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:maxImageSize="40dp"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-    <SearchView
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="61dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,7 +53,6 @@
 
         <ProgressBar
             android:id="@+id/gamesLoading"
-            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
