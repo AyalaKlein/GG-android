@@ -29,10 +29,7 @@
         android:columnWidth="150dp"
         android:horizontalSpacing="15dp"
         android:numColumns="auto_fit"
-        android:verticalSpacing="15dp">
-
-        <include layout="@layout/content_main" />
-    </GridView>
+        android:verticalSpacing="15dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

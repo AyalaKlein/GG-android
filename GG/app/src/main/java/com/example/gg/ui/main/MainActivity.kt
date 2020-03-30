@@ -77,8 +77,8 @@ class MainActivity : AppCompatActivity() {
 
             var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var gameView = inflator.inflate(R.layout.activity_game, null)
-            gameView.imgFood.setImageResource(R.drawable.common_google_signin_btn_icon_dark_focused!!)
-            gameView.gName.text = game.name!!
+            gameView.imgFood.setImageResource(R.drawable.ic_launcher_background!!)
+            gameView.tvName.text = game.name!!
 
             return gameView
         }
