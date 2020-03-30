@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ddd"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ui.main.MainActivity"
+    tools:ignore="ContentDescription,MissingConstraints">
+
+    <ImageView
+        android:id="@+id/imgFood"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+
+    <TextView
+        android:id="@+id/gName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="No Name Game"
+        android:textSize="20sp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
