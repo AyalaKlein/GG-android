@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background"
     tools:context=".ui.gameDetails.GameDetails"
     tools:ignore="ContentDescription,MissingConstraints">
 
@@ -12,6 +13,7 @@
         android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="@string/emName"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.517"
@@ -38,6 +40,7 @@
         android:layout_width="59dp"
         android:layout_height="35dp"
         android:text="@string/game_genre"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.608"
@@ -50,6 +53,7 @@
         android:layout_width="130dp"
         android:layout_height="35dp"
         android:text="@string/emGenre"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.975"
@@ -62,6 +66,7 @@
         android:layout_width="59dp"
         android:layout_height="35dp"
         android:text="@string/game_score"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.608"
@@ -74,6 +79,7 @@
         android:layout_width="130dp"
         android:layout_height="35dp"
         android:text="@string/emScore"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.978"
@@ -86,6 +92,7 @@
         android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="@string/game_desc"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.055"
@@ -95,9 +102,10 @@
 
     <TextView
         android:id="@+id/gdDescV"
-        android:layout_width="370dp"
+        android:layout_width="350dp"
         android:layout_height="90dp"
         android:text="@string/emDesc"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.39"
@@ -126,6 +134,7 @@
         android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="@string/game_comm"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.055"
@@ -135,13 +144,13 @@
 
     <GridView
         android:id="@+id/gvGames"
-        android:layout_width="370dp"
+        android:layout_width="350dp"
         android:layout_height="130dp"
         android:layout_gravity="center"
         android:columnWidth="150dp"
-        android:horizontalSpacing="15dp"
-        android:verticalSpacing="15dp"
-        tools:layout_editor_absoluteX="16dp"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        tools:layout_editor_absoluteX="22dp"
         tools:layout_editor_absoluteY="448dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

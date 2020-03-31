@@ -16,6 +16,7 @@
         android:layout_width="129dp"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:textColor="@color/colorPrimary"
         android:text="Name"
         android:textSize="25sp" />
 
@@ -25,6 +26,7 @@
         android:layout_height="match_parent"
         android:gravity="right|bottom"
         android:text="French Fries"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
 
