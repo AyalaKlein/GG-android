@@ -147,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("sGenre", game.genre)
                 intent.putExtra("sScore", game.score.toString())
                 intent.putExtra("sDesc", game.description)
+                intent.putExtra("sUserId", game.userId)
                 intent.putExtra("sImage", getSelectedImageByteArray(gameView.imgFood))
 
                 context!!.startActivity(intent)

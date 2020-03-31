@@ -17,12 +17,14 @@ import com.example.gg.data.model.Comment
 import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.ImageRetriever
 import com.example.gg.ui.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_game_details.*
 import java.io.ByteArrayOutputStream
 
 
 class GameDetails : AppCompatActivity() {
 
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
@@ -33,6 +35,8 @@ class GameDetails : AppCompatActivity() {
         gdGenreV.text = intent.getStringExtra("sGenre")
         gdScoreV.text = intent.getStringExtra("sScore")
         gdDescV.text = intent.getStringExtra("sDesc")
+        var userId = intent.getStringExtra("sUserId")
+
         val sId = intent.getStringExtra("sId")
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -43,18 +47,20 @@ class GameDetails : AppCompatActivity() {
             bmp
         )
 
-        bEdit.setOnClickListener { view ->
-            val intent = Intent(view.context, EditGame::class.java)
-            intent.putExtra("sId", sId)
-            intent.putExtra("sName", gdNameV.text.toString())
-            intent.putExtra("sGenre", gdGenreV.text.toString())
-            intent.putExtra("sScore", gdScoreV.text.toString())
-            intent.putExtra("sDesc", gdDescV.text.toString())
-            intent.putExtra("sImage", getSelectedImageByteArray(gdImage))
-            startActivity(intent)
-            finish()
+        if (auth.currentUser!!.uid == userId) {
+            bEdit.visibility = View.VISIBLE
+            bEdit.setOnClickListener { view ->
+                val intent = Intent(view.context, EditGame::class.java)
+                intent.putExtra("sId", sId)
+                intent.putExtra("sName", gdNameV.text.toString())
+                intent.putExtra("sGenre", gdGenreV.text.toString())
+                intent.putExtra("sScore", gdScoreV.text.toString())
+                intent.putExtra("sDesc", gdDescV.text.toString())
+                intent.putExtra("sImage", getSelectedImageByteArray(gdImage))
+                startActivity(intent)
+                finish()
+            }
         }
-
     }
 
     private fun getSelectedImageByteArray(image: ImageView): ByteArray {
