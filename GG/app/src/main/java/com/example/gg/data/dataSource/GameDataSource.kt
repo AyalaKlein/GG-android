@@ -29,7 +29,9 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         val gameListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 _games.clear()
-                dataSnapshot.children.mapNotNullTo(_games) { it.getValue<Game>(Game::class.java) }
+                dataSnapshot.children.mapNotNullTo(_games) {
+                    it.getValue<Game>(Game::class.java)
+                }
                 callback?.let { it(Unit) }
             }
             override fun onCancelled(databaseError: DatabaseError) {
