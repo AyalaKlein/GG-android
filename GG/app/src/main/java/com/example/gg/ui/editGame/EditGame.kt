@@ -2,9 +2,11 @@ package com.example.gg.ui.editGame
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
 import com.example.gg.ui.main.MainActivity
@@ -30,6 +32,14 @@ class EditGame : AppCompatActivity() {
         game_score.editText?.setText(intent.getStringExtra("sScore"))
         game_desc.editText?.setText(intent.getStringExtra("sDesc"))
 
+        val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
+        val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val image =
+            findViewById<ImageView>(R.id.game_image)
+
+        image.setImageBitmap(
+            bmp
+        )
         newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(
             NewGameViewModel::class.java)
 

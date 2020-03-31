@@ -2,6 +2,8 @@ package com.example.gg.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ import com.example.gg.ui.gameDetails.GameDetails
 import com.example.gg.ui.newGame.CreateNewGame
 import kotlinx.android.synthetic.main.activity_game.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.ByteArrayOutputStream
 import java.lang.Exception
 
 
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextChange(newText: String): Boolean {
                     val filterGames = ArrayList<Game>()
                     gamesList.forEach {
-                        if (it.name.contains("$newText")){
+                        if (it.name.toLowerCase().contains("$newText".toLowerCase())){
                             filterGames.add(it)
                         }
                     }
@@ -108,6 +111,16 @@ class MainActivity : AppCompatActivity() {
             return position.toLong()
         }
 
+        private fun getSelectedImageByteArray(image: ImageView): ByteArray {
+            image.isDrawingCacheEnabled = true
+            image.buildDrawingCache()
+            val bitmap = (image.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+            return baos.toByteArray()
+        }
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val game = this.gameList[position]
 
@@ -134,6 +147,8 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("sGenre", game.genre)
                 intent.putExtra("sScore", game.score.toString())
                 intent.putExtra("sDesc", game.description)
+                intent.putExtra("sImage", getSelectedImageByteArray(gameView.imgFood))
+
                 context!!.startActivity(intent)
                 Toast.makeText(context, "You Clicked: " + v.tvName.text,Toast.LENGTH_SHORT).show()
             }
