@@ -8,28 +8,16 @@
     tools:ignore="ContentDescription,MissingConstraints">
 
     <TextView
-        android:id="@+id/gdName"
-        android:layout_width="125dp"
-        android:layout_height="40dp"
-        android:text="@string/game_name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.115"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.044" />
-
-    <TextView
         android:id="@+id/gdNameV"
         android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="@string/emName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <ImageView
         android:id="@+id/gdImage"
@@ -42,80 +30,80 @@
         app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.262"
-        app:srcCompat="@android:drawable/picture_frame"  />
+        app:layout_constraintVertical_bias="0.132"
+        app:srcCompat="@android:drawable/picture_frame" />
 
     <TextView
         android:id="@+id/gdGenre"
-        android:layout_width="125dp"
-        android:layout_height="40dp"
+        android:layout_width="59dp"
+        android:layout_height="35dp"
         android:text="@string/game_genre"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintHorizontal_bias="0.608"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.513" />
+        app:layout_constraintVertical_bias="0.106" />
 
     <TextView
         android:id="@+id/gdGenreV"
-        android:layout_width="125dp"
-        android:layout_height="40dp"
+        android:layout_width="130dp"
+        android:layout_height="35dp"
         android:text="@string/emGenre"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintHorizontal_bias="0.975"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.513" />
+        app:layout_constraintVertical_bias="0.106" />
 
     <TextView
         android:id="@+id/gdScore"
-        android:layout_width="125dp"
-        android:layout_height="40dp"
+        android:layout_width="59dp"
+        android:layout_height="35dp"
         android:text="@string/game_score"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintHorizontal_bias="0.608"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.594" />
+        app:layout_constraintVertical_bias="0.23" />
 
     <TextView
-    android:id="@+id/gdScoreV"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    android:text="@string/emScore"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.772"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.594" />
+        android:id="@+id/gdScoreV"
+        android:layout_width="130dp"
+        android:layout_height="35dp"
+        android:text="@string/emScore"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.978"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.229" />
 
-<TextView
-    android:id="@+id/gdDesc"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    android:text="@string/game_desc"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.115"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.678" />
+    <TextView
+        android:id="@+id/gdDesc"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37" />
 
-<TextView
-    android:id="@+id/gdDescV"
-    android:layout_width="310dp"
-    android:layout_height="100dp"
-    android:text="@string/emDesc"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.326"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.852" />
+    <TextView
+        android:id="@+id/gdDescV"
+        android:layout_width="370dp"
+        android:layout_height="90dp"
+        android:text="@string/emDesc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.481" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/bEdit"
@@ -131,5 +119,29 @@
         app:layout_constraintVertical_bias="0.976"
         app:maxImageSize="40dp"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+
+    <TextView
+        android:id="@+id/gdComm"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_comm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.59" />
+
+    <GridView
+        android:id="@+id/gvGames"
+        android:layout_width="370dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:columnWidth="150dp"
+        android:horizontalSpacing="15dp"
+        android:verticalSpacing="15dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="448dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,18 +2,20 @@ package com.example.gg.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Toast
-import android.widget.ProgressBar
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.gg.R
+import com.example.gg.R.drawable.ic_launcher_background
+import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.gameDetails.GameDetails
 import com.example.gg.ui.newGame.CreateNewGame
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        @RequiresApi(Build.VERSION_CODES.P)
         fun afterLoad() {
             games?.forEach {
                 gamesList.add(it)
@@ -41,7 +44,32 @@ class MainActivity : AppCompatActivity() {
             adapter = GameAdapter(this, gamesList, mainViewModel)
 
             gvGames.adapter = adapter
-            findViewById<ProgressBar>(R.id.gamesLoading).visibility = View.GONE
+            findViewById<ProgressBar>(R.id.gamesLoad).visibility = View.GONE
+
+            val lv = findViewById<GridView>(R.id.gvGames)
+            val searchView = findViewById<SearchView>(R.id.gSearch)
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    val filterGames = ArrayList<Game>()
+                    gamesList.forEach {
+                        if (it.name.contains("$newText")){
+                            filterGames.add(it)
+                        }
+                    }
+                    adapter!!.gameList = filterGames
+                    gvGames.adapter = adapter
+                    return false                }
+
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return false
+                }
+
+            })
+
+
+
         }
 
         mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory {
@@ -93,12 +121,13 @@ class MainActivity : AppCompatActivity() {
                         .load(it.result!!)
                         .into(gameView.imgFood)
                 } else {
-                    gameView.imgFood.setImageResource(R.drawable.ic_launcher_background!!)
+                    gameView.imgFood.setImageResource(ic_launcher_background)
                 }
             }
 
-            gameView.tvName.text = game.name!!
+            gameView.tvName.text = game.name
             gameView.setOnClickListener { v ->
+
                 val intent = Intent(context,GameDetails::class.java)
                 intent.putExtra("sId", game.id)
                 intent.putExtra("sName", game.name)

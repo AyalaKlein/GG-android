@@ -11,13 +11,14 @@
     <string name="invalid_password">Password must be > 5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="game_name">Game Name</string>
-    <string name="game_desc">Description</string>
-    <string name="game_score">Game Score</string>
-    <string name="game_genre">Game Genre</string>
+    <string name="game_name">Name</string>
+    <string name="game_desc">Description:</string>
+    <string name="game_score">Score:</string>
+    <string name="game_genre">Genre:</string>
     <string name="emName">No Name</string>
     <string name="emGenre">No Genre</string>
     <string name="emScore">No Score</string>
     <string name="emDesc">No Description</string>
+    <string name="game_comm">Comments</string>
 </resources>
 
