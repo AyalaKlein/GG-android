@@ -12,6 +12,7 @@
         android:id="@+id/game_name"
         android:layout_width="315dp"
         android:layout_height="90dp"
+        android:text="@string/game_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

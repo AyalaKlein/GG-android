@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.example.gg.R
+import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.ImageRetriever
 import com.example.gg.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_game.view.*
@@ -19,11 +20,21 @@ class GameDetails : AppCompatActivity() {
         parentActivityIntent?.getStringExtra("sId")
         var imageRetriever: ImageRetriever? = null
 
-
-
         gdNameV.text = intent.getStringExtra("sName")
         gdGenreV.text = intent.getStringExtra("sGenre")
         gdScoreV.text = intent.getStringExtra("sScore")
         gdDescV.text = intent.getStringExtra("sDesc")
+        val sId = intent.getStringExtra("sId")
+
+        bEdit.setOnClickListener { view ->
+            val intent = Intent(view.context, EditGame::class.java)
+            intent.putExtra("sId", sId)
+            intent.putExtra("sName", gdNameV.text.toString())
+            intent.putExtra("sGenre", gdGenreV.text.toString())
+            intent.putExtra("sScore", gdScoreV.text.toString())
+            intent.putExtra("sDesc", gdDescV.text.toString())
+            startActivity(intent)
+            finish()
+        }
     }
 }

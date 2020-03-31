@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.editGame.EditGame"
+    tools:context=".ui.newGame.CreateNewGame"
     tools:ignore="ContentDescription,MissingConstraints">
 
 
@@ -12,6 +12,7 @@
         android:id="@+id/game_name"
         android:layout_width="315dp"
         android:layout_height="90dp"
+        android:text="@string/game_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,10 +105,10 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/save_game"
+        android:id="@+id/update_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Game"
+        android:text="Update Game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -63,6 +63,20 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         })
     }
 
+    fun updateGame(key: String, genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
+       val game = key?.let { Game(it, genre, name, score, description, uid) }
+        val gameValues = game?.toMap()
+
+        val childUpdates = HashMap<String, Any>()
+        if(!gameValues.isNullOrEmpty()) {
+            childUpdates["/Games/$key"] = gameValues
+        }
+
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+            return@Continuation key
+        })
+    }
+
     fun saveImage(uid: String, data: ByteArray): UploadTask {
         var imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
         return imageRef!!.putBytes(data)
