@@ -99,7 +99,13 @@ class MainActivity : AppCompatActivity() {
 
             gameView.tvName.text = game.name!!
             gameView.setOnClickListener { v ->
-                context!!.startActivity(Intent(context,GameDetails::class.java))
+                val intent = Intent(context,GameDetails::class.java)
+                intent.putExtra("sId", game.id)
+                intent.putExtra("sName", game.name)
+                intent.putExtra("sGenre", game.genre)
+                intent.putExtra("sScore", game.score.toString())
+                intent.putExtra("sDesc", game.description)
+                context!!.startActivity(intent)
                 Toast.makeText(context, "You Clicked: " + v.tvName.text,Toast.LENGTH_SHORT).show()
             }
             return gameView

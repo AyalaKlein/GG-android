@@ -24,7 +24,6 @@ class CreateNewGame : AppCompatActivity() {
         newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
 
         save_game.setOnClickListener {
-            val aa = game_genre.editText
             writeNewGame(game_genre.editText?.text.toString(), game_name.editText?.text.toString(), game_score.editText?.text.toString().toInt(), game_desc.editText?.text.toString())
         }
 

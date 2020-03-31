@@ -7,18 +7,85 @@
     tools:context=".ui.gameDetails.GameDetails"
     tools:ignore="ContentDescription,MissingConstraints">
 
-<ImageView
-    android:id="@+id/new_image"
-    android:layout_width="220dp"
-    android:layout_height="220dp"
-    app:srcCompat="@android:drawable/picture_frame"
-    tools:layout_editor_absoluteX="1dp"
-    tools:layout_editor_absoluteY="90dp" />
+    <TextView
+        android:id="@+id/gdName"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.044" />
 
-<TextView
-    android:id="@+id/new_name"
+    <TextView
+        android:id="@+id/gdNameV"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/emName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.043" />
+
+    <ImageView
+        android:id="@+id/gdImage"
+        android:layout_width="177dp"
+        android:layout_height="164dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_image_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.262"
+        app:srcCompat="@android:drawable/picture_frame"  />
+
+    <TextView
+        android:id="@+id/gdGenre"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_genre"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.513" />
+
+    <TextView
+        android:id="@+id/gdGenreV"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/emGenre"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.513" />
+
+    <TextView
+        android:id="@+id/gdScore"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="@string/game_score"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.594" />
+
+    <TextView
+    android:id="@+id/gdScoreV"
     android:layout_width="125dp"
     android:layout_height="40dp"
+    android:text="@string/emScore"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.772"
@@ -27,30 +94,7 @@
     app:layout_constraintVertical_bias="0.594" />
 
 <TextView
-    android:id="@+id/game__score"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    android:text="@string/game_score"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.115"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.594" />
-
-<TextView
-    android:id="@+id/new_score"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.772"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.513" />
-
-<TextView
-    android:id="@+id/game__desc"
+    android:id="@+id/gdDesc"
     android:layout_width="125dp"
     android:layout_height="40dp"
     android:text="@string/game_desc"
@@ -62,9 +106,10 @@
     app:layout_constraintVertical_bias="0.678" />
 
 <TextView
-    android:id="@+id/new_desc"
+    android:id="@+id/gdDescV"
     android:layout_width="310dp"
     android:layout_height="100dp"
+    android:text="@string/emDesc"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.326"
@@ -72,38 +117,4 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_bias="0.852" />
 
-<TextView
-    android:id="@+id/game__genre"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    android:text="@string/game_genre"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.115"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.513" />
-
-<TextView
-    android:id="@+id/new_genre"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.772"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.043" />
-
-<TextView
-    android:id="@+id/game__name"
-    android:layout_width="125dp"
-    android:layout_height="40dp"
-    android:text="@string/game_name"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.115"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.044" />
 </androidx.constraintlayout.widget.ConstraintLayout>

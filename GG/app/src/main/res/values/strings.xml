@@ -15,5 +15,9 @@
     <string name="game_desc">Description</string>
     <string name="game_score">Game Score</string>
     <string name="game_genre">Game Genre</string>
+    <string name="emName">No Name</string>
+    <string name="emGenre">No Genre</string>
+    <string name="emScore">No Score</string>
+    <string name="emDesc">No Description</string>
 </resources>
 
