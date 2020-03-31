@@ -137,7 +137,10 @@ class MainActivity : AppCompatActivity() {
                     gameView.imgFood.setImageResource(ic_launcher_background)
                 }
             }
-
+val commentsList = ArrayList<Comment>()
+            game.Comments?.forEach {
+                commentsList.add(it.value)
+            }
             gameView.tvName.text = game.name
             gameView.setOnClickListener { v ->
 
@@ -147,6 +150,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("sGenre", game.genre)
                 intent.putExtra("sScore", game.score.toString())
                 intent.putExtra("sDesc", game.description)
+                intent.putExtra("comm", game.Comments)
                 intent.putExtra("sImage", getSelectedImageByteArray(gameView.imgFood))
 
                 context!!.startActivity(intent)

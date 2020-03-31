@@ -17,22 +17,33 @@ import com.example.gg.data.model.Comment
 import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.ImageRetriever
 import com.example.gg.ui.main.MainActivity
+import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
 import java.io.ByteArrayOutputStream
 
 
 class GameDetails : AppCompatActivity() {
 
+    var adapter: CommentAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
         val intent1 = Intent(this, MainActivity::class.java)
 
-
+        val commentsList = ArrayList<Comment>()
         gdNameV.text = intent.getStringExtra("sName")
         gdGenreV.text = intent.getStringExtra("sGenre")
         gdScoreV.text = intent.getStringExtra("sScore")
         gdDescV.text = intent.getStringExtra("sDesc")
+        val comments: HashMap<String, Comment> = intent.getSerializableExtra("comm") as HashMap<String, Comment>
+        comments.forEach {
+            commentsList.add(it.value)
+        }
+
+        adapter = CommentAdapter(this, commentsList)
+
+        gvComm.adapter = adapter
+
         val sId = intent.getStringExtra("sId")
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -71,9 +82,9 @@ class GameDetails : AppCompatActivity() {
         var commList = ArrayList<Comment>()
         var context: Context? = null
 
-        constructor(context: Context, gameList: ArrayList<Comment>, imageRetriever: ImageRetriever) : super() {
+        constructor(context: Context, commList: ArrayList<Comment>) : super() {
             this.context = context
-            this.commList = gameList
+            this.commList = commList
         }
 
         override fun getCount(): Int {
@@ -94,7 +105,8 @@ class GameDetails : AppCompatActivity() {
             var inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var commentView = inflater.inflate(R.layout.activity_comment, null)
 
-//            commentView.gComment.text = comment.text!!
+            commentView.gComment.text = comment.text!!
+            commentView.userName.text = comment.userId
             return commentView
         }
     }

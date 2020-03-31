@@ -98,7 +98,7 @@
         app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintVertical_bias="0.425" />
 
     <TextView
         android:id="@+id/gdDescV"
@@ -108,10 +108,10 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintHorizontal_bias="0.262"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.481" />
+        app:layout_constraintVertical_bias="0.542" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/bEdit"
@@ -140,17 +140,22 @@
         app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59" />
+        app:layout_constraintVertical_bias="0.671" />
 
     <GridView
-        android:id="@+id/gvGames"
-        android:layout_width="350dp"
+        android:id="@+id/gvComm"
+        android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_gravity="center"
-        android:columnWidth="150dp"
+        android:layout_gravity="bottom"
+        android:columnWidth="400dp"
         android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp"
-        tools:layout_editor_absoluteX="22dp"
-        tools:layout_editor_absoluteY="448dp" />
+        android:numColumns="auto_fit"
+        android:verticalSpacing="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.888" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
