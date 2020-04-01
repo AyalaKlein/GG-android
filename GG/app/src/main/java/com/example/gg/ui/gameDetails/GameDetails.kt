@@ -18,13 +18,10 @@ import com.example.gg.R
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
-import com.example.gg.ui.main.ImageRetriever
 import com.example.gg.ui.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
-import kotlinx.android.synthetic.main.activity_comment_pop_up.*
-import kotlinx.android.synthetic.main.activity_game.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
-import kotlinx.android.synthetic.main.activity_game_details.view.*
 import java.io.ByteArrayOutputStream
 
 
@@ -32,6 +29,8 @@ class GameDetails : AppCompatActivity() {
 
     private val commentsList = ArrayList<Comment>()
     var adapter: CommentAdapter? = null
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
@@ -58,6 +57,7 @@ class GameDetails : AppCompatActivity() {
         gvComm.adapter = adapter
 
         val sId = sGame.id
+        var userId = sGame.userId
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         val image =
@@ -67,16 +67,19 @@ class GameDetails : AppCompatActivity() {
             bmp
         )
 
-        bEdit.setOnClickListener { view ->
-            val intent = Intent(view.context, EditGame::class.java)
-            intent.putExtra("sId", sId)
-            intent.putExtra("sName", gdNameV.text.toString())
-            intent.putExtra("sGenre", gdGenreV.text.toString())
-            intent.putExtra("sScore", gdScoreV.text.toString())
-            intent.putExtra("sDesc", gdDescV.text.toString())
-            intent.putExtra("sImage", getSelectedImageByteArray(gdImage))
-            startActivity(intent)
-            finish()
+        if (auth.currentUser!!.uid == userId) {
+            bEdit.visibility = View.VISIBLE
+            bEdit.setOnClickListener { view ->
+                val intent = Intent(view.context, EditGame::class.java)
+                intent.putExtra("sId", sId)
+                intent.putExtra("sName", gdNameV.text.toString())
+                intent.putExtra("sGenre", gdGenreV.text.toString())
+                intent.putExtra("sScore", gdScoreV.text.toString())
+                intent.putExtra("sDesc", gdDescV.text.toString())
+                intent.putExtra("sImage", getSelectedImageByteArray(gdImage))
+                startActivity(intent)
+                finish()
+            }
         }
 
         bComm.setOnClickListener {
@@ -96,9 +99,6 @@ class GameDetails : AppCompatActivity() {
         }
         }
 
-
-    }
-
     private fun getSelectedImageByteArray(image: ImageView): ByteArray {
         image.isDrawingCacheEnabled = true
         image.buildDrawingCache()
@@ -108,6 +108,7 @@ class GameDetails : AppCompatActivity() {
 
         return baos.toByteArray()
     }
+}
 
     class CommentAdapter : BaseAdapter {
         var commList = ArrayList<Comment>()
