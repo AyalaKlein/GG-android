@@ -138,7 +138,7 @@ class GameDetails : AppCompatActivity() {
             var commentView = inflater.inflate(R.layout.activity_comment, null)
 
             commentView.gComment.text = comment.text!!
-            commentView.userName.text = comment.userId
+            commentView.userName.text = comment.user
             return commentView
         }
     }

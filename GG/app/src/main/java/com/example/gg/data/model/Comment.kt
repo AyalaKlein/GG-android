@@ -7,7 +7,7 @@ data class Comment(
     val id: String = "",
     val gameId: String = "",
     var text: String = "",
-    val userId: String = ""
+    val user: String = ""
 ): Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -15,7 +15,7 @@ data class Comment(
             "id" to id,
             "gameId" to gameId,
             "text" to text,
-            "user" to userId
+            "user" to user
         )
     }
 }
