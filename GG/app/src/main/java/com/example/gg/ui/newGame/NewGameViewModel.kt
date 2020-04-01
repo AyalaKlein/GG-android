@@ -14,6 +14,10 @@ class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() 
         return gameRepository.updateGame(key, genre, name, score, description, uid)
     }
 
+    fun saveComment(gameId: String, text: String, uid: String): Task<String> {
+        return gameRepository.saveComment(gameId, text, uid)
+    }
+
     fun saveImage(uid: String, data: ByteArray): UploadTask {
         return gameRepository.saveImage(uid, data)
     }

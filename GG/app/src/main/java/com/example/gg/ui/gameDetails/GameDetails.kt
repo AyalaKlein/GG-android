@@ -11,40 +11,53 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.gg.CommentPopUpActivity
 import com.example.gg.R
 import com.example.gg.data.model.Comment
+import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.ImageRetriever
 import com.example.gg.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_comment.view.*
+import kotlinx.android.synthetic.main.activity_comment_pop_up.*
+import kotlinx.android.synthetic.main.activity_game.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
+import kotlinx.android.synthetic.main.activity_game_details.view.*
 import java.io.ByteArrayOutputStream
 
 
 class GameDetails : AppCompatActivity() {
 
+    private val commentsList = ArrayList<Comment>()
     var adapter: CommentAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
         val intent1 = Intent(this, MainActivity::class.java)
 
-        val commentsList = ArrayList<Comment>()
-        gdNameV.text = intent.getStringExtra("sName")
-        gdGenreV.text = intent.getStringExtra("sGenre")
-        gdScoreV.text = intent.getStringExtra("sScore")
-        gdDescV.text = intent.getStringExtra("sDesc")
-        val comments: HashMap<String, Comment> = intent.getSerializableExtra("comm") as HashMap<String, Comment>
+        var sGame = Game()
+        sGame = intent.getSerializableExtra("sGame") as Game
+        gdGenreV.text =  sGame.name
+        gdScoreV.text =  sGame.score.toString()
+        gdDescV.text =  sGame.description
+        gdNameV.text = sGame.name
+
+        val comments: HashMap<String, Comment> = sGame.Comments as HashMap<String, Comment>
         comments.forEach {
             commentsList.add(it.value)
         }
 
+        val newComment = Comment()
+        if(!intent.getStringExtra("newComm").isNullOrEmpty()) {
+            commentsList.add(Comment("","", intent.getStringExtra("newComm")))
+        }
         adapter = CommentAdapter(this, commentsList)
 
         gvComm.adapter = adapter
 
-        val sId = intent.getStringExtra("sId")
+        val sId = sGame.id
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         val image =
@@ -65,6 +78,24 @@ class GameDetails : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        bComm.setOnClickListener {
+            val intent = Intent(this, CommentPopUpActivity::class.java)
+            intent.putExtra("sGame", sGame)
+            intent.putExtra("sImage", getSelectedImageByteArray(gdImage))
+            intent.putExtra("gameId", sId)
+            intent.putExtra("popupbtn", "OK")
+            intent.putExtra("darkstatusbar", false)
+            startActivity(intent)
+        }
+
+        val callback = this.onBackPressedDispatcher.addCallback(this) {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        }
+
 
     }
 
@@ -110,5 +141,3 @@ class GameDetails : AppCompatActivity() {
             return commentView
         }
     }
-
-}

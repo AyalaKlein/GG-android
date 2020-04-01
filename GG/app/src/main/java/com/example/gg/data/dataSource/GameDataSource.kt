@@ -1,6 +1,7 @@
 package com.example.gg.data.dataSource
 
 import android.net.Uri
+import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -72,6 +73,22 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         val childUpdates = HashMap<String, Any>()
         if(!gameValues.isNullOrEmpty()) {
             childUpdates["/Games/$key"] = gameValues
+        }
+
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+            return@Continuation key
+        })
+    }
+
+    fun saveComment(gameId: String, text: String, uid: String): Task<String> {
+        val key = _db!!.child("Games/$gameId/Comments").push().key
+
+        val comment = key?.let { Comment(it, gameId, text, uid) }
+        val commentValues = comment?.toMap()
+
+        val childUpdates = HashMap<String, Any>()
+        if(!commentValues.isNullOrEmpty()) {
+            childUpdates["/Games/$gameId/Comments/$key"] = commentValues
         }
 
         return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{

@@ -20,6 +20,10 @@ class GameRepository(private val dataSource: GameDataSource) {
         return dataSource.updateGame(key, genre, name, score, description, uid)
     }
 
+    fun saveComment(gameId: String, text: String, uid: String): Task<String> {
+        return dataSource.saveComment(gameId, text, uid)
+    }
+
     fun saveImage(uid: String, data: ByteArray): UploadTask {
         return dataSource.saveImage(uid, data)
     }

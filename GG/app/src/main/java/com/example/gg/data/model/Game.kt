@@ -1,6 +1,7 @@
 package com.example.gg.data.model
 
 import com.google.firebase.database.Exclude
+import java.io.Serializable
 
 data class Game(
     val id: String = "",
@@ -10,7 +11,7 @@ data class Game(
     val description: String = "",
     val userId: String = "",
     val Comments: HashMap<String, Comment>? = HashMap<String, Comment>()
-) {
+) : Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(

@@ -12,8 +12,8 @@ data class Comment(
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
-            "gameId" to gameId,
             "id" to id,
+            "gameId" to gameId,
             "text" to text,
             "user" to userId
         )

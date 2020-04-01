@@ -145,12 +145,7 @@ val commentsList = ArrayList<Comment>()
             gameView.setOnClickListener { v ->
 
                 val intent = Intent(context,GameDetails::class.java)
-                intent.putExtra("sId", game.id)
-                intent.putExtra("sName", game.name)
-                intent.putExtra("sGenre", game.genre)
-                intent.putExtra("sScore", game.score.toString())
-                intent.putExtra("sDesc", game.description)
-                intent.putExtra("comm", game.Comments)
+                intent.putExtra("sGame", game)
                 intent.putExtra("sImage", getSelectedImageByteArray(gameView.imgFood))
 
                 context!!.startActivity(intent)
