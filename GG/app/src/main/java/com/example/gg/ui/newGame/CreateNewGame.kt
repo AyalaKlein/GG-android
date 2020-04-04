@@ -4,10 +4,17 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
 import com.example.gg.ui.main.MainActivity
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_new_game.*
 import java.io.ByteArrayOutputStream
@@ -17,26 +24,69 @@ class CreateNewGame : AppCompatActivity() {
     private lateinit var newGameViewModel: NewGameViewModel
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
+    private lateinit var gameName: TextInputLayout
+    private lateinit var gameImage: ImageView
+    private lateinit var gameGenre: TextInputLayout
+    private lateinit var gameScore: TextInputLayout
+    private lateinit var gameDesc: TextInputLayout
+    private lateinit var saveButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_game)
 
         newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
 
+        newGameViewModel.createFormState.observe(this@CreateNewGame, Observer {
+            saveButton.isEnabled = it
+        })
+
         save_game.setOnClickListener {
             writeNewGame(game_genre.editText?.text.toString(), game_name.editText?.text.toString(), game_score.editText?.text.toString().toInt(), game_desc.editText?.text.toString())
         }
 
         img_pick_btn.setOnClickListener {
-                    pickImageFromGallery();
-                }
-            }
+            pickImageFromGallery();
+        }
+
+        gameName = findViewById<TextInputLayout>(R.id.game_name)
+        gameImage = findViewById<ImageView>(R.id.game_image)
+        gameGenre = findViewById<TextInputLayout>(R.id.game_genre)
+        gameScore = findViewById<TextInputLayout>(R.id.game_score)
+        gameDesc = findViewById<TextInputLayout>(R.id.game_desc)
+        saveButton = findViewById<Button>(R.id.save_game)
+
+        gameName.addOnEditTextAttachedListener {
+            checkFormValid()
+        }
+
+        gameGenre.addOnEditTextAttachedListener {
+            checkFormValid()
+        }
+
+        gameScore.addOnEditTextAttachedListener {
+            checkFormValid()
+        }
+
+        gameDesc.addOnEditTextAttachedListener {
+            checkFormValid()
+        }
+    }
+
+    private fun checkFormValid() {
+        newGameViewModel.createGameDataChanged(gameName = gameName.editText?.text.toString(),
+            gameImage = gameImage.drawable,
+            gameGenre = gameGenre.editText?.text.toString(),
+            gameScore = gameScore.editText?.text.toString(),
+            gameDesc = gameDesc.editText?.text.toString())
+    }
 
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, 1000)
         game_image.setImageURI(intent?.data)
+        checkFormValid()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,3 +117,4 @@ class CreateNewGame : AppCompatActivity() {
         }
     }
 }
+
