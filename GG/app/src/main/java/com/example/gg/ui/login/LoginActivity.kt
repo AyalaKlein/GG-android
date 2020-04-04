@@ -53,20 +53,36 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
+        fun disableAll() {
+            username.isEnabled = false
+            password.isEnabled = false
+            login.isEnabled = false
+            register.isEnabled = false
+        }
+
+        fun enableAll() {
+            username.isEnabled = true
+            password.isEnabled = true
+            login.isEnabled = true
+            register.isEnabled = true
+        }
+
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
+            enableAll()
+
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
+                setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
-            finish()
+                //Complete and destroy login activity once successful
+                finish()
+            }
         })
 
         username.afterTextChanged {
@@ -106,18 +122,23 @@ class LoginActivity : AppCompatActivity() {
 
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
+                    EditorInfo.IME_ACTION_DONE -> {
+                        disableAll()
+                        loading.visibility = View.VISIBLE
                         loginUser()
+                    }
                 }
                 false
             }
 
             login.setOnClickListener {
+                disableAll()
                 loading.visibility = View.VISIBLE
                 loginUser()
             }
 
             register.setOnClickListener {
+                disableAll()
                 loading.visibility = View.VISIBLE
                 registerUser()
             }

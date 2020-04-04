@@ -23,10 +23,7 @@ class LoginDataSource {
                 } else {
                     callback(
                         Result.Error(
-                            IOException(
-                                "Failed to login user",
-                                task.exception
-                            )
+                            "Failed to login user"
                         )
                     )
                 }
@@ -45,10 +42,7 @@ class LoginDataSource {
                 } else {
                     callback(
                         Result.Error(
-                            IOException(
-                                "Failed to register user",
-                                task.exception
-                            )
+                            "Failed to register user"
                         )
                     )
                 }
