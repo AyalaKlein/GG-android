@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 gamesList.add(it)
             }
 
+            gamesList.sortByDescending { it.id }
             adapter = GameAdapter(this, gamesList, mainViewModel)
 
             gvGames.adapter = adapter
