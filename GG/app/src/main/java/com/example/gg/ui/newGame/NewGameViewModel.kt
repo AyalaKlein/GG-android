@@ -28,11 +28,13 @@ class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() 
         return gameRepository.saveImage(uid, data)
     }
 
-    fun createGameDataChanged(gameName: String?, gameImage: Drawable?, gameGenre: String?, gameScore: String?, gameDesc: String?) {
+    fun createGameDataChanged(gameName: String?, gameImage: Drawable?, gameGenre: String?, gameScore: String?, gameDesc: String?): Boolean {
         _createForm.value = gameName!!.isNotEmpty() &&
                 gameGenre!!.isNotEmpty() &&
                 gameDesc!!.isNotEmpty() &&
                 gameScore!!.isNotEmpty() && gameImage != null
+
+        return _createForm.value!!
     }
 
     fun deleteGame(gameId: String): Task<Void> {

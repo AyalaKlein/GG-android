@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.navArgs
 import com.example.gg.R
 import com.example.gg.ui.main.MainActivity
 import com.example.gg.ui.newGame.NewGameViewModel
@@ -21,7 +22,6 @@ import java.io.ByteArrayOutputStream
 class EditGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
-
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
