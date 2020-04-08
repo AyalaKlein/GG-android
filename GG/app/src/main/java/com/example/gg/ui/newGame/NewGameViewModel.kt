@@ -34,4 +34,8 @@ class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() 
                 gameDesc!!.isNotEmpty() &&
                 gameScore!!.isNotEmpty() && gameImage != null
     }
+
+    fun deleteGame(gameId: String): Task<Void> {
+        return gameRepository.deleteGame(gameId)
+    }
 }

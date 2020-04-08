@@ -21,7 +21,7 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
     private var _games: MutableList<Game>
 
     init {
-        _db  = Firebase.database.reference
+        _db = Firebase.database.reference
         _storage = Firebase.storage.reference
         _games = mutableListOf()
     }
@@ -35,6 +35,7 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
                 }
                 callback?.let { it(Unit) }
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
@@ -50,32 +51,45 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         return this._games
     }
 
-    fun createGame(genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
+    fun createGame(
+        genre: String,
+        name: String,
+        score: Int,
+        description: String,
+        uid: String
+    ): Task<String> {
         val key = _db!!.child("Games").push().key
 
         val game = key?.let { Game(it, genre, name, score, description, uid) }
         val gameValues = game?.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        if(!gameValues.isNullOrEmpty()) {
+        if (!gameValues.isNullOrEmpty()) {
             childUpdates["/Games/$key"] = gameValues
         }
 
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
             return@Continuation key
         })
     }
 
-    fun updateGame(key: String, genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
-       val game = key?.let { Game(it, genre, name, score, description, uid) }
+    fun updateGame(
+        key: String,
+        genre: String,
+        name: String,
+        score: Int,
+        description: String,
+        uid: String
+    ): Task<String> {
+        val game = key?.let { Game(it, genre, name, score, description, uid) }
         val gameValues = game?.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        if(!gameValues.isNullOrEmpty()) {
+        if (!gameValues.isNullOrEmpty()) {
             childUpdates["/Games/$key"] = gameValues
         }
 
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
             return@Continuation key
         })
     }
@@ -87,22 +101,26 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         val commentValues = comment?.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        if(!commentValues.isNullOrEmpty()) {
+        if (!commentValues.isNullOrEmpty()) {
             childUpdates["/Games/$gameId/Comments/$key"] = commentValues
         }
 
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
             return@Continuation key
         })
     }
 
     fun saveImage(uid: String, data: ByteArray): UploadTask {
-        var imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
+        val imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
         return imageRef!!.putBytes(data)
     }
 
     fun getImageUrl(uid: String): Task<Uri> {
-        var imageRef = _storage!!.child("images/${uid}.jpg")
+        val imageRef = _storage!!.child("images/${uid}.jpg")
         return imageRef?.downloadUrl
+    }
+
+    fun deleteGame(gameId: String): Task<Void> {
+        return _db!!.child("$_tableName/$gameId").removeValue()
     }
 }

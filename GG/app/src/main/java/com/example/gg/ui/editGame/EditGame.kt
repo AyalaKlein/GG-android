@@ -31,6 +31,7 @@ class EditGame : AppCompatActivity() {
         game_genre.editText?.setText(intent.getStringExtra("sGenre"))
         game_score.editText?.setText(intent.getStringExtra("sScore"))
         game_desc.editText?.setText(intent.getStringExtra("sDesc"))
+        val gameId: String = intent.getStringExtra("sId")
 
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -49,6 +50,10 @@ class EditGame : AppCompatActivity() {
 
         img_pick_btn.setOnClickListener {
             pickImageFromGallery();
+        }
+
+        delete_game.setOnClickListener {
+            deleteGame(gameId)
         }
     }
 
@@ -87,4 +92,13 @@ class EditGame : AppCompatActivity() {
         }
     }
 
+    private fun deleteGame(gameId: String) {
+        newGameViewModel.deleteGame(gameId).addOnSuccessListener {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }.addOnFailureListener {
+            // error not good
+        }
+    }
 }

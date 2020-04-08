@@ -31,4 +31,8 @@ class GameRepository(private val dataSource: GameDataSource) {
     fun getImageUrl(uid: String): Task<Uri> {
         return dataSource.getImageUrl(uid)
     }
+
+    fun deleteGame(gameId: String): Task<Void> {
+        return dataSource.deleteGame(gameId)
+    }
 }
