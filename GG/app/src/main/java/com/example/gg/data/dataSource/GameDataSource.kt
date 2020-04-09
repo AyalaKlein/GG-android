@@ -1,29 +1,25 @@
 package com.example.gg.data.dataSource
 
 import android.content.Context
-import android.net.Uri
 import com.example.gg.data.dbAccess.AppDatabase
 import com.example.gg.data.dbAccess.dao.CommentDao
 import com.example.gg.data.dbAccess.dao.GameDao
+import com.example.gg.data.dbAccess.dao.ImageDao
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.data.model.Image
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskExecutors
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
-import java.io.ByteArrayInputStream
-import java.security.Key
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -152,19 +148,34 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
-        val key = _db!!.child("Games/$gameId/Comments").push().key
+        val key: String = (if (_isConnected) _db!!.child("Games/$gameId/Comments").push().key else UUID.randomUUID()).toString()
+        val comment = Comment(key, gameId, text, uid)
 
-        val comment = key?.let { Comment(it, gameId, text, uid) }
-        val commentValues = comment?.toMap()
+        if (_isConnected) {
+            val commentValues = comment.toMap()
+            val childUpdates = HashMap<String, Any>()
+            if (!commentValues.isNullOrEmpty()) {
+                childUpdates["/Games/$gameId/Comments/$key"] = commentValues
+            }
 
-        val childUpdates = HashMap<String, Any>()
-        if (!commentValues.isNullOrEmpty()) {
-            childUpdates["/Games/$gameId/Comments/$key"] = commentValues
+            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+                return@Continuation key
+            })
+        } else {
+            AppDatabase.getDatabase(context).commentDao().insert(comment)
+
+            for (index in 0 until this._games.size) {
+                val currGame = this._games[index]
+                if (currGame.id === comment.gameId) {
+                    this._games[index].Comments!![key] = comment
+                    break
+                }
+            }
+
+            return Tasks.call {
+                return@call key
+            }
         }
-
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
-            return@Continuation key
-        })
     }
 
     fun saveImage(uid: String, data: ByteArray): Task<String> {
@@ -205,11 +216,11 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
             val localDB = AppDatabase.getDatabase(context)
             val gameDao: GameDao = localDB.gameDao()
             val commentDao: CommentDao = localDB.commentDao()
+            val imageDao: ImageDao = localDB.imageDao()
 
             val updatedGames: List<Game> = gameDao.getAll()
             val updatedComments: List<Comment> = commentDao.getAll()
-
-
+            val updatedImages: List<Image>? = null
         }
 
         return null

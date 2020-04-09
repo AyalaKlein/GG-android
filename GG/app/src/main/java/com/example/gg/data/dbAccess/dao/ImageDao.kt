@@ -8,6 +8,9 @@ interface ImageDao {
     @Query("SELECT * FROM images WHERE id = :id")
     fun get(id: String): Image?
 
+    @Query("SELECT * FROM images WHERE id in (:ids)")
+    fun get(ids: Array<String>): MutableList<Image>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(image: Image)
 
