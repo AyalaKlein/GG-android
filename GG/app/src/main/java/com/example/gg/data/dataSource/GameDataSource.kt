@@ -7,6 +7,7 @@ import com.example.gg.data.dbAccess.dao.CommentDao
 import com.example.gg.data.dbAccess.dao.GameDao
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
+import com.example.gg.data.model.Image
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskExecutors
@@ -21,6 +22,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
+import java.io.ByteArrayInputStream
+import java.security.Key
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -164,14 +167,32 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         })
     }
 
-    fun saveImage(uid: String, data: ByteArray): UploadTask {
-        val imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
-        return imageRef!!.putBytes(data)
+    fun saveImage(uid: String, data: ByteArray): Task<String> {
+        if (_isConnected) {
+            val imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
+            return imageRef!!.putBytes(data).continueWith(Continuation {
+                return@Continuation uid
+            })
+        } else {
+            val image = Image(uid, data.toString())
+            AppDatabase.getDatabase(context).imageDao().insert(image)
+            callback?.let { it(Unit) }
+            return Tasks.call {
+                return@call uid
+            }
+        }
     }
 
-    fun getImageUrl(uid: String): Task<Uri> {
-        val imageRef = _storage!!.child("images/${uid}.jpg")
-        return imageRef?.downloadUrl
+    fun getImageUrl(uid: String): Task<ByteArray?> {
+        if (_isConnected) {
+            val imageRef = _storage!!.child("images/${uid}.jpg")
+            return imageRef.getBytes(1024 * 1024 * 100)
+        } else {
+            val image = AppDatabase.getDatabase(context).imageDao().get(uid)
+            return Tasks.call {
+                return@call image?.data?.toByteArray()
+            }
+        }
     }
 
     fun deleteGame(gameId: String): Task<Void> {
