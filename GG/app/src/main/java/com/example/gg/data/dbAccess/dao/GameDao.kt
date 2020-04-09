@@ -8,11 +8,8 @@ interface GameDao {
     @Query("SELECT * FROM games")
     fun getAll(): List<Game>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(game: Game)
-
-    @Update
-    fun update(game: Game)
 
     @Delete
     fun delete(game: Game)

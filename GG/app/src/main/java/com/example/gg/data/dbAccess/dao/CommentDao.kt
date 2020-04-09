@@ -8,11 +8,8 @@ interface CommentDao {
     @Query("SELECT * FROM comments")
     fun getAll(): List<Comment>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(comment: Comment)
-
-    @Update
-    fun update(comment: Comment)
 
     @Delete
     fun delete(comment: Comment)

@@ -22,7 +22,9 @@ import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment_pop_up.*
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class CommentPopUpActivity : AppCompatActivity() {
     private var popupButton = ""
     private var darkStatusBar = false

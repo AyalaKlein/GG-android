@@ -3,17 +3,28 @@ package com.example.gg.data.dataSource
 import android.content.Context
 import android.net.Uri
 import com.example.gg.data.dbAccess.AppDatabase
+import com.example.gg.data.dbAccess.dao.CommentDao
+import com.example.gg.data.dbAccess.dao.GameDao
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskExecutors
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import java.util.*
+import kotlin.collections.HashMap
 
+@InternalCoroutinesApi
 class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
 
     private var _db: DatabaseReference? = null
@@ -73,19 +84,29 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         description: String,
         uid: String
     ): Task<String> {
-        val key = _db!!.child("Games").push().key
+        val key: String = (if (_isConnected) _db!!.child("Games").push().key else UUID.randomUUID()).toString()
 
-        val game = key?.let { Game(it, genre, name, score, description, uid) }
-        val gameValues = game?.toMap()
+        val game = Game(key, genre, name, score, description, uid)
 
-        val childUpdates = HashMap<String, Any>()
-        if (!gameValues.isNullOrEmpty()) {
-            childUpdates["/Games/$key"] = gameValues
+        if (_isConnected) {
+            val gameValues = game.toMap()
+
+            val childUpdates = HashMap<String, Any>()
+            if (!gameValues.isNullOrEmpty()) {
+                childUpdates["/Games/$key"] = gameValues
+            }
+
+            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+                return@Continuation key
+            })
+        } else {
+            AppDatabase.getDatabase(context).gameDao().insert(game)
+            this._games.add(game)
+            callback?.let { it(Unit) }
+            return Tasks.call {
+                return@call key
+            }
         }
-
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
-            return@Continuation key
-        })
     }
 
     fun updateGame(
@@ -96,17 +117,35 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         description: String,
         uid: String
     ): Task<String> {
-        val game = key?.let { Game(it, genre, name, score, description, uid) }
-        val gameValues = game?.toMap()
+        val game = Game(key, genre, name, score, description, uid)
 
-        val childUpdates = HashMap<String, Any>()
-        if (!gameValues.isNullOrEmpty()) {
-            childUpdates["/Games/$key"] = gameValues
+        if (_isConnected) {
+            val gameValues = game.toMap()
+
+            val childUpdates = HashMap<String, Any>()
+            if (!gameValues.isNullOrEmpty()) {
+                childUpdates["/Games/$key"] = gameValues
+            }
+
+            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+                return@Continuation key
+            })
+        } else {
+            AppDatabase.getDatabase(context).gameDao().insert(game)
+
+            for (index in 0 until this._games.size) {
+                val currGame = this._games[index]
+                if (currGame.id === game.id) {
+                    this._games[index] = currGame.copy(genre = game.genre, description = game.description, name = game.name, score = game.score)
+                    break
+                }
+            }
+
+            callback?.let { it(Unit) }
+            return Tasks.call {
+                return@call key
+            }
         }
-
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
-            return@Continuation key
-        })
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
@@ -137,5 +176,21 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
 
     fun deleteGame(gameId: String): Task<Void> {
         return _db!!.child("$_tableName/$gameId").removeValue()
+    }
+
+    fun syncLocalDB(): Task<Void>? {
+        val scope = CoroutineScope(newFixedThreadPoolContext(4, "synchronizationPool"))
+        scope.launch {
+            val localDB = AppDatabase.getDatabase(context)
+            val gameDao: GameDao = localDB.gameDao()
+            val commentDao: CommentDao = localDB.commentDao()
+
+            val updatedGames: List<Game> = gameDao.getAll()
+            val updatedComments: List<Comment> = commentDao.getAll()
+
+
+        }
+
+        return null
     }
 }

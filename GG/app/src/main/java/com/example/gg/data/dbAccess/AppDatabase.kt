@@ -18,22 +18,24 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private var _db: AppDatabase? = null
-        @InternalCoroutinesApi
-        fun GetDatabase(context: Context) : AppDatabase {
-//        val scope = CoroutineScope(newFixedThreadPoolContext(4, "synchronizationPool"))
-//        scope.launch {
-//
-//        }
 
+        @InternalCoroutinesApi
+        fun getDatabase(context: Context) : AppDatabase {
             if (_db == null) {
                 synchronized(AppDatabase::class) {
                     if (_db == null) {
-                        _db = Room.databaseBuilder(context, AppDatabase::class.java, "GG-DB").build()
+                        _db = Room.databaseBuilder(context, AppDatabase::class.java, "GG-DB")
+                            .allowMainThreadQueries()
+                            .build()
                     }
                 }
             }
 
             return _db!!
+        }
+
+        fun closeDatabase() {
+            _db?.close()
         }
     }
 }

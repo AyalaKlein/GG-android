@@ -18,8 +18,10 @@ import com.example.gg.ui.main.MainActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_new_game.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@InternalCoroutinesApi
 class CreateNewGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
@@ -74,6 +76,7 @@ class CreateNewGame : AppCompatActivity() {
         }
     }
 
+    @InternalCoroutinesApi
     private fun checkFormValid(): Boolean {
         return newGameViewModel.createGameDataChanged(gameName = gameName.editText?.text.toString(),
             gameImage = gameImage.drawable.current,

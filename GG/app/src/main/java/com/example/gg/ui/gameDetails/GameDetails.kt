@@ -22,9 +22,11 @@ import com.example.gg.ui.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
 
+@InternalCoroutinesApi
 class GameDetails : AppCompatActivity() {
 
     private val commentsList = ArrayList<Comment>()

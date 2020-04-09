@@ -5,7 +5,9 @@ import com.example.gg.data.dataSource.GameDataSource
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class GameRepository(private val dataSource: GameDataSource) {
 
     fun getGames(): MutableList<Game> {

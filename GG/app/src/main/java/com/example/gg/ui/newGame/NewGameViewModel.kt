@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.example.gg.data.GameRepository
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() {
     private val _createForm = MutableLiveData<Boolean>()
     val createFormState: LiveData<Boolean> = _createForm

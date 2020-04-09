@@ -16,8 +16,10 @@ import com.example.gg.ui.newGame.NewGameViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_game.*
 import kotlinx.android.synthetic.main.activity_game_details.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@InternalCoroutinesApi
 @Suppress("DEPRECATION")
 class EditGame : AppCompatActivity() {
 
