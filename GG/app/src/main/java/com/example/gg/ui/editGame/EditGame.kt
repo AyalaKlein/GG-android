@@ -41,7 +41,7 @@ class EditGame : AppCompatActivity() {
         image.setImageBitmap(
             bmp
         )
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(
             NewGameViewModel::class.java)
 
         update_game.setOnClickListener {

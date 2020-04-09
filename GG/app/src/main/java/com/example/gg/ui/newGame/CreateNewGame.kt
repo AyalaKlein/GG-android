@@ -36,7 +36,7 @@ class CreateNewGame : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_game)
 
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(NewGameViewModel::class.java)
 
         newGameViewModel.createFormState.observe(this@CreateNewGame, Observer {
             saveButton.isEnabled = it

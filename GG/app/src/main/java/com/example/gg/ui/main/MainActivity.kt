@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory {
+        mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory(applicationContext) {
             games = mainViewModel.getGames()
             afterLoad()
         }).get(MainViewModel::class.java)

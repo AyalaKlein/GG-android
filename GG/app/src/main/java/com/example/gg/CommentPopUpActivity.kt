@@ -35,7 +35,7 @@ class CommentPopUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comment_pop_up)
 
 
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(
             NewGameViewModel::class.java)
 
         // ...

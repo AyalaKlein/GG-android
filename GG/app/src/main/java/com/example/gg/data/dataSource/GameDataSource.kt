@@ -1,6 +1,8 @@
 package com.example.gg.data.dataSource
 
+import android.content.Context
 import android.net.Uri
+import com.example.gg.data.dbAccess.AppDatabase
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Continuation
@@ -12,11 +14,12 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 
-class GameDataSource(val callback: ((Unit) -> Unit)?) {
+class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
 
     private var _db: DatabaseReference? = null
     private var _storage: StorageReference? = null
     private val _tableName: String = "Games"
+    private var _isConnected: Boolean = false
 
     private var _games: MutableList<Game>
 
@@ -24,6 +27,17 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         _db = Firebase.database.reference
         _storage = Firebase.storage.reference
         _games = mutableListOf()
+    }
+
+    private fun initConnectionStatus() {
+        val connectedRef = Firebase.database.getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                _isConnected = snapshot.getValue(Boolean::class.java) ?: false
+            }
+        })
     }
 
     private fun initGameList() {
@@ -44,6 +58,7 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
     }
 
     init {
+        initConnectionStatus()
         initGameList()
     }
 
