@@ -8,14 +8,13 @@ import com.example.gg.data.model.ModelStatus
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.InternalCoroutinesApi
-import java.util.*
 
 @InternalCoroutinesApi
 class GameDataAccess(val context: Context) {
     private var offlineGames: MutableList<Game> = mutableListOf<Game>()
 
     fun getGames(): MutableList<Game> {
-        return this.offlineGames
+        return this.offlineGames.filter { currGame -> currGame.status != ModelStatus.DELETED.ordinal }.toMutableList()
     }
 
     fun setGames(games: MutableList<Game>) {
@@ -24,7 +23,7 @@ class GameDataAccess(val context: Context) {
 
     fun createGame(game: Game): Task<String> {
         AppDatabase.getDatabase(context).gameDao().insert(game)
-//        this._games.add(game)
+        this.offlineGames.add(game)
 //        callback?.let { it(Unit) }
         return Tasks.call {
             return@call game.id
@@ -34,17 +33,31 @@ class GameDataAccess(val context: Context) {
     fun updateGame(game: Game): Task<String> {
         AppDatabase.getDatabase(context).gameDao().insert(game)
 
-//        for (index in 0 until this._games.size) {
-//            val currGame = this._games[index]
-//            if (currGame.id === game.id) {
-//                this._games[index] = currGame.copy(genre = game.genre, description = game.description, name = game.name, score = game.score)
-//                break
-//            }
-//        }
+        for (index in 0 until this.offlineGames.size) {
+            val currGame = this.offlineGames[index]
+            if (currGame.id === game.id) {
+                this.offlineGames[index] = currGame.copy(genre = game.genre, description = game.description, name = game.name, score = game.score)
+                break
+            }
+        }
 //
 //        callback?.let { it(Unit) }
         return Tasks.call {
             return@call game.id
+        }
+    }
+
+    fun deleteGame(key: String): Task<String> {
+        for (index in 0 until this.offlineGames.size) {
+            val currGame = this.offlineGames[index]
+            if (currGame.id === key) {
+                this.offlineGames[index].status = ModelStatus.DELETED.ordinal
+                break
+            }
+        }
+
+        return Tasks.call {
+            return@call key
         }
     }
 }

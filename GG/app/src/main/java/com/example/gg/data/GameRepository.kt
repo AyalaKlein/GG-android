@@ -51,7 +51,11 @@ class GameRepository(private val dataSource: GameDataSource, context: Context) {
     }
 
     fun deleteGame(key: String): Task<String> {
-        return dataSource.deleteGame(key)
+        return if (FireBaseDataSource.IsConnected) {
+            dataSource.deleteGame(key)
+        } else {
+            gameLocalDB.deleteGame(key)
+        }
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
