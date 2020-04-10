@@ -184,8 +184,10 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         }
     }
 
-    fun deleteGame(gameId: String): Task<Void> {
-        return FireBaseDataSource.DbRef.child("$_tableName/$gameId").removeValue()
+    fun deleteGame(gameId: String): Task<String> {
+        return FireBaseDataSource.DbRef.child("$_tableName/$gameId").removeValue().continueWith(Continuation<Void, String> {
+            return@Continuation gameId
+        })
     }
 
     fun syncLocalDB(): Task<Void>? {

@@ -50,10 +50,6 @@ class EditGame : AppCompatActivity() {
         img_pick_btn.setOnClickListener {
             pickImageFromGallery();
         }
-
-        delete_game.setOnClickListener {
-            deleteGame(gameId)
-        }
     }
 
     private fun pickImageFromGallery() {
@@ -86,16 +82,6 @@ class EditGame : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
-        }.addOnFailureListener {
-            // error not good
-        }
-    }
-
-    private fun deleteGame(gameId: String) {
-        newGameViewModel.deleteGame(gameId).addOnSuccessListener {
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            finish()
         }.addOnFailureListener {
             // error not good
         }
