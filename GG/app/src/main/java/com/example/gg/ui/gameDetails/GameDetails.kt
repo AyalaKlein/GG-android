@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.CommentPopUpActivity
 import com.example.gg.R
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
@@ -40,7 +41,6 @@ class GameDetails : AppCompatActivity() {
 
     private val commentsList = ArrayList<Comment>()
     var adapter: CommentAdapter? = null
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +81,7 @@ class GameDetails : AppCompatActivity() {
             bmp
         )
 
-        if (auth.currentUser!!.uid == userId) {
+        if (FireBaseDataSource.Auth.currentUser!!.uid == userId) {
             bEdit.visibility = View.VISIBLE
             bEdit.setOnClickListener { view ->
                 val intent = Intent(view.context, EditGame::class.java)

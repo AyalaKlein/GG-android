@@ -8,14 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.navArgs
 import com.example.gg.R
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.ui.main.MainActivity
 import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_game.*
-import kotlinx.android.synthetic.main.activity_game_details.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
@@ -24,7 +22,6 @@ import java.io.ByteArrayOutputStream
 class EditGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_game)
@@ -79,7 +76,7 @@ class EditGame : AppCompatActivity() {
     }
 
     private fun updateGame(key: String, genre: String, name: String, score: Int, description: String) {
-        newGameViewModel.updateGame(key, genre, name, score, description, auth.currentUser!!.uid).addOnCompleteListener {
+        newGameViewModel.updateGame(key, genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid).addOnCompleteListener {
             newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray()).addOnSuccessListener {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)

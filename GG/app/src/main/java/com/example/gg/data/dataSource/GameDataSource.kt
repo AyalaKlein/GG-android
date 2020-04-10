@@ -26,29 +26,8 @@ import kotlin.collections.HashMap
 @InternalCoroutinesApi
 class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
 
-    private var _db: DatabaseReference? = null
-    private var _storage: StorageReference? = null
     private val _tableName: String = "Games"
-    private var _isConnected: Boolean = false
-
-    private var _games: MutableList<Game>
-
-    init {
-        _db = Firebase.database.reference
-        _storage = Firebase.storage.reference
-        _games = mutableListOf()
-    }
-
-    private fun initConnectionStatus() {
-        val connectedRef = Firebase.database.getReference(".info/connected")
-        connectedRef.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                _isConnected = snapshot.getValue(Boolean::class.java) ?: false
-            }
-        })
-    }
+    private var _games: MutableList<Game> = mutableListOf()
 
     private fun initGameList() {
         val gameListener = object : ValueEventListener {
@@ -64,11 +43,10 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
         }
-        _db!!.child(_tableName).addListenerForSingleValueEvent(gameListener)
+        FireBaseDataSource.DbRef.child(_tableName).addListenerForSingleValueEvent(gameListener)
     }
 
     init {
-        initConnectionStatus()
         initGameList()
     }
 
@@ -83,11 +61,11 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         description: String,
         uid: String
     ): Task<String> {
-        val key: String = (if (_isConnected) _db!!.child("Games").push().key else UUID.randomUUID()).toString()
+        val key: String = (if (FireBaseDataSource.IsConnected) FireBaseDataSource.DbRef.child("Games").push().key else UUID.randomUUID()).toString()
 
         val game = Game(key, genre, name, score, description, uid)
 
-        if (_isConnected) {
+        if (FireBaseDataSource.IsConnected) {
             val gameValues = game.toMap()
 
             val childUpdates = HashMap<String, Any>()
@@ -95,7 +73,7 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
                 childUpdates["/Games/$key"] = gameValues
             }
 
-            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+            return FireBaseDataSource.DbRef.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
                 return@Continuation key
             })
         } else {
@@ -118,7 +96,7 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
     ): Task<String> {
         val game = Game(key, genre, name, score, description, uid)
 
-        if (_isConnected) {
+        if (FireBaseDataSource.IsConnected) {
             val gameValues = game.toMap()
 
             val childUpdates = HashMap<String, Any>()
@@ -126,7 +104,7 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
                 childUpdates["/Games/$key"] = gameValues
             }
 
-            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+            return FireBaseDataSource.DbRef.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
                 return@Continuation key
             })
         } else {
@@ -148,17 +126,17 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
-        val key: String = (if (_isConnected) _db!!.child("Games/$gameId/Comments").push().key else UUID.randomUUID()).toString()
+        val key: String = (if (FireBaseDataSource.IsConnected) FireBaseDataSource.DbRef.child("Games/$gameId/Comments").push().key else UUID.randomUUID()).toString()
         val comment = Comment(key, gameId, text, uid)
 
-        if (_isConnected) {
+        if (FireBaseDataSource.IsConnected) {
             val commentValues = comment.toMap()
             val childUpdates = HashMap<String, Any>()
             if (!commentValues.isNullOrEmpty()) {
                 childUpdates["/Games/$gameId/Comments/$key"] = commentValues
             }
 
-            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+            return FireBaseDataSource.DbRef.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
                 return@Continuation key
             })
         } else {
@@ -179,8 +157,8 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
     }
 
     fun saveImage(uid: String, data: ByteArray): Task<String> {
-        if (_isConnected) {
-            val imageRef: StorageReference? = _storage!!.child("images/${uid}.jpg")
+        if (FireBaseDataSource.IsConnected) {
+            val imageRef: StorageReference? = FireBaseDataSource.StorageRef.child("images/${uid}.jpg")
             return imageRef!!.putBytes(data).continueWith(Continuation {
                 return@Continuation uid
             })
@@ -195,8 +173,8 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
     }
 
     fun getImageUrl(uid: String): Task<ByteArray?> {
-        if (_isConnected) {
-            val imageRef = _storage!!.child("images/${uid}.jpg")
+        if (FireBaseDataSource.IsConnected) {
+            val imageRef = FireBaseDataSource.StorageRef.child("images/${uid}.jpg")
             return imageRef.getBytes(1024 * 1024 * 100)
         } else {
             val image = AppDatabase.getDatabase(context).imageDao().get(uid)
@@ -206,9 +184,9 @@ class GameDataSource(val context: Context, val callback: ((Unit) -> Unit)?) {
         }
     }
 
-    fun deleteGame(key: String): Task<String> {
-        return _db!!.child("/Games/$key").removeValue().continueWith(Continuation<Void, String> {
-            return@Continuation key
+    fun deleteGame(gameId: String): Task<String> {
+        return FireBaseDataSource.DbRef.child("$_tableName/$gameId").removeValue().continueWith(Continuation<Void, String> {
+            return@Continuation gameId
         })
     }
 

@@ -16,11 +16,11 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.ViewModelProviders
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.model.Game
 import com.example.gg.ui.gameDetails.GameDetails
 import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment_pop_up.*
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -30,7 +30,6 @@ class CommentPopUpActivity : AppCompatActivity() {
     private var darkStatusBar = false
 
     private lateinit var newGameViewModel: NewGameViewModel
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(0, 0)
@@ -91,7 +90,7 @@ class CommentPopUpActivity : AppCompatActivity() {
     }
 
     private fun saveComment(gameId: String) {
-            newGameViewModel.saveComment(gameId, popup_window_text.editText?.text.toString(), auth.currentUser!!.email.toString()).addOnCompleteListener {
+            newGameViewModel.saveComment(gameId, popup_window_text.editText?.text.toString(), FireBaseDataSource.Auth.currentUser!!.email.toString()).addOnCompleteListener {
                 Toast.makeText(applicationContext, "You Comment Saved",Toast.LENGTH_SHORT).show()
             }.addOnFailureListener {
                 // error not good
