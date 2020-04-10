@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.ui.login.afterTextChanged
 import com.example.gg.ui.main.MainActivity
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_new_game.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
@@ -25,7 +25,6 @@ import java.io.ByteArrayOutputStream
 class CreateNewGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private lateinit var gameName: TextInputLayout
     private lateinit var gameImage: ImageView
@@ -114,7 +113,7 @@ class CreateNewGame : AppCompatActivity() {
 
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
         if (checkFormValid()) {
-            newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid)
+            newGameViewModel.createGame(genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid)
                 .addOnCompleteListener {
                     newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray())
                         .addOnSuccessListener {

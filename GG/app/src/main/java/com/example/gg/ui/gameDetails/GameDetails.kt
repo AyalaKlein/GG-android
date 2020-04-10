@@ -15,11 +15,11 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gg.CommentPopUpActivity
 import com.example.gg.R
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.MainActivity
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -31,7 +31,6 @@ class GameDetails : AppCompatActivity() {
 
     private val commentsList = ArrayList<Comment>()
     var adapter: CommentAdapter? = null
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +68,7 @@ class GameDetails : AppCompatActivity() {
             bmp
         )
 
-        if (auth.currentUser!!.uid == userId) {
+        if (FireBaseDataSource.Auth.currentUser!!.uid == userId) {
             bEdit.visibility = View.VISIBLE
             bEdit.setOnClickListener { view ->
                 val intent = Intent(view.context, EditGame::class.java)
