@@ -15,6 +15,7 @@ data class Game(
     @ColumnInfo(name = "game_score") var score: Int = -1,
     @ColumnInfo(name = "game_description") var description: String = "",
     @ColumnInfo(name = "game_user_id") var userId: String = "",
+    @ColumnInfo(name = "game_status") var status: Int = ModelStatus.UPDATED.ordinal,
     @Ignore var Comments: HashMap<String, Comment>? = HashMap<String, Comment>()
 ) : Serializable {
     @Exclude
