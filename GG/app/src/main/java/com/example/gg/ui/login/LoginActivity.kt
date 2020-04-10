@@ -16,6 +16,7 @@ import android.widget.*
 
 import com.example.gg.R
 import com.example.gg.data.Result
+import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.ui.main.MainActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -29,7 +30,11 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-
+        if (FireBaseDataSource.Auth.currentUser != null) {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
