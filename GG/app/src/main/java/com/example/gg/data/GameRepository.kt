@@ -5,7 +5,9 @@ import com.example.gg.data.dataSource.GameDataSource
 import com.example.gg.data.model.Game
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class GameRepository(private val dataSource: GameDataSource) {
 
     fun getGames(): MutableList<Game> {
@@ -28,11 +30,11 @@ class GameRepository(private val dataSource: GameDataSource) {
         return dataSource.saveComment(gameId, text, uid)
     }
 
-    fun saveImage(uid: String, data: ByteArray): UploadTask {
+    fun saveImage(uid: String, data: ByteArray): Task<String> {
         return dataSource.saveImage(uid, data)
     }
 
-    fun getImageUrl(uid: String): Task<Uri> {
+    fun getImageUrl(uid: String): Task<ByteArray?> {
         return dataSource.getImageUrl(uid)
     }
 }

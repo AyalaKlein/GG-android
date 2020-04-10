@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CommentPopUpActivity"></activity>
+        <activity android:name=".CommentPopUpActivity" />
         <activity android:name=".ui.newGame.CreateNewGame" />
         <activity
             android:name=".ui.main.MainActivity"

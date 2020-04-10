@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.example.gg.data.GameRepository
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() {
     private val _createForm = MutableLiveData<Boolean>()
     val createFormState: LiveData<Boolean> = _createForm
@@ -28,14 +30,17 @@ class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() 
         return gameRepository.saveComment(gameId, text, uid)
     }
 
-    fun saveImage(uid: String, data: ByteArray): UploadTask {
+    fun saveImage(uid: String, data: ByteArray): Task<String> {
         return gameRepository.saveImage(uid, data)
     }
 
-    fun createGameDataChanged(gameName: String?, gameImage: Drawable?, gameGenre: String?, gameScore: String?, gameDesc: String?) {
+    fun createGameDataChanged(gameName: String?, gameImage: Drawable?, gameGenre: String?, gameScore: String?, gameDesc: String?): Boolean {
         _createForm.value = gameName!!.isNotEmpty() &&
                 gameGenre!!.isNotEmpty() &&
                 gameDesc!!.isNotEmpty() &&
                 gameScore!!.isNotEmpty() && gameImage != null
+
+        return _createForm.value!!
     }
+
 }

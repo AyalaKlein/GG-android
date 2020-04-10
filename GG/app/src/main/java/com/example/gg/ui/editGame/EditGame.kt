@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.navArgs
 import com.example.gg.R
 import com.example.gg.ui.main.MainActivity
 import com.example.gg.ui.newGame.NewGameViewModel
@@ -15,13 +16,14 @@ import com.example.gg.ui.newGame.NewGameViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_game.*
 import kotlinx.android.synthetic.main.activity_game_details.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@InternalCoroutinesApi
 @Suppress("DEPRECATION")
 class EditGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
-
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class EditGame : AppCompatActivity() {
         game_genre.editText?.setText(intent.getStringExtra("sGenre"))
         game_score.editText?.setText(intent.getStringExtra("sScore"))
         game_desc.editText?.setText(intent.getStringExtra("sDesc"))
+        val gameId: String = intent.getStringExtra("sId")
 
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -40,7 +43,7 @@ class EditGame : AppCompatActivity() {
         image.setImageBitmap(
             bmp
         )
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(
             NewGameViewModel::class.java)
 
         update_game.setOnClickListener {
@@ -86,5 +89,4 @@ class EditGame : AppCompatActivity() {
             // error not good
         }
     }
-
 }

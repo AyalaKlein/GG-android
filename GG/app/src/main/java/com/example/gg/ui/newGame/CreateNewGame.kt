@@ -13,12 +13,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
+import com.example.gg.ui.login.afterTextChanged
 import com.example.gg.ui.main.MainActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_new_game.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@InternalCoroutinesApi
 class CreateNewGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
@@ -35,7 +38,7 @@ class CreateNewGame : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_game)
 
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(NewGameViewModel::class.java)
 
         newGameViewModel.createFormState.observe(this@CreateNewGame, Observer {
             saveButton.isEnabled = it
@@ -56,26 +59,27 @@ class CreateNewGame : AppCompatActivity() {
         gameDesc = findViewById<TextInputLayout>(R.id.game_desc)
         saveButton = findViewById<Button>(R.id.save_game)
 
-        gameName.addOnEditTextAttachedListener {
+        gameName.editText!!.afterTextChanged {
             checkFormValid()
         }
 
-        gameGenre.addOnEditTextAttachedListener {
+        gameGenre.editText!!.afterTextChanged {
             checkFormValid()
         }
 
-        gameScore.addOnEditTextAttachedListener {
+        gameScore.editText!!.afterTextChanged {
             checkFormValid()
         }
 
-        gameDesc.addOnEditTextAttachedListener {
+        gameDesc.editText!!.afterTextChanged {
             checkFormValid()
         }
     }
 
-    private fun checkFormValid() {
-        newGameViewModel.createGameDataChanged(gameName = gameName.editText?.text.toString(),
-            gameImage = gameImage.drawable,
+    @InternalCoroutinesApi
+    private fun checkFormValid(): Boolean {
+        return newGameViewModel.createGameDataChanged(gameName = gameName.editText?.text.toString(),
+            gameImage = gameImage.drawable.current,
             gameGenre = gameGenre.editText?.text.toString(),
             gameScore = gameScore.editText?.text.toString(),
             gameDesc = gameDesc.editText?.text.toString())
@@ -86,13 +90,16 @@ class CreateNewGame : AppCompatActivity() {
         intent.type = "image/*"
         startActivityForResult(intent, 1000)
         game_image.setImageURI(intent?.data)
-        checkFormValid()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
         game_image.setImageURI(data?.data)
+
+        if (data != null) {
+            checkFormValid()
+        }
     }
 
     private fun getSelectedImageByteArray(): ByteArray {
@@ -106,15 +113,18 @@ class CreateNewGame : AppCompatActivity() {
     }
 
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
-        newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid).addOnCompleteListener {
-            newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray()).addOnSuccessListener {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+        if (checkFormValid()) {
+            newGameViewModel.createGame(genre, name, score, description, auth.currentUser!!.uid)
+                .addOnCompleteListener {
+                    newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray())
+                        .addOnSuccessListener {
+                            val intent = Intent(applicationContext, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                }.addOnFailureListener {
+                // error not good
             }
-        }.addOnFailureListener {
-            // error not good
         }
     }
 }
-

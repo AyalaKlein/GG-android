@@ -28,9 +28,12 @@ import com.example.gg.ui.newGame.NewGameViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.io.ByteArrayOutputStream
 
 
+@InternalCoroutinesApi
+@Suppress("DEPRECATION")
 class GameDetails : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
@@ -44,7 +47,8 @@ class GameDetails : AppCompatActivity() {
         setContentView(R.layout.activity_game_details)
         val intent1 = Intent(this, MainActivity::class.java)
 
-        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory(applicationContext)).get(
+            NewGameViewModel::class.java)
 
         var sGame = Game()
         sGame = intent.getSerializableExtra("sGame") as Game
