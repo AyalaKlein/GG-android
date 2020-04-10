@@ -11,14 +11,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.ViewModelProviders
 import com.example.gg.CommentPopUpActivity
 import com.example.gg.R
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
 import com.example.gg.ui.main.MainActivity
+import com.example.gg.ui.newGame.NewGameViewModel
+import com.example.gg.ui.newGame.NewGameViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
@@ -26,6 +32,8 @@ import java.io.ByteArrayOutputStream
 
 
 class GameDetails : AppCompatActivity() {
+
+    private lateinit var newGameViewModel: NewGameViewModel
 
     private val commentsList = ArrayList<Comment>()
     var adapter: CommentAdapter? = null
@@ -35,6 +43,8 @@ class GameDetails : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
         val intent1 = Intent(this, MainActivity::class.java)
+
+        newGameViewModel  = ViewModelProviders.of(this, NewGameViewModelFactory()).get(NewGameViewModel::class.java)
 
         var sGame = Game()
         sGame = intent.getSerializableExtra("sGame") as Game
@@ -80,6 +90,13 @@ class GameDetails : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+
+
+            bDelete.visibility = View.VISIBLE
+            bDelete.setOnClickListener { view ->
+                deleteGame(sId)
+            }
+
         }
 
         bComm.setOnClickListener {
@@ -107,6 +124,17 @@ class GameDetails : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
         return baos.toByteArray()
+    }
+    
+    private fun deleteGame(key: String) {
+        newGameViewModel.deleteGame(key).addOnCompleteListener {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                Toast.makeText(applicationContext, "Your Game Removed Successfully",Toast.LENGTH_SHORT).show()
+                finish()
+        }.addOnFailureListener {
+            // error not good
+        }
     }
 }
 

@@ -67,15 +67,20 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
     }
 
     fun updateGame(key: String, genre: String, name: String, score: Int, description: String, uid: String): Task<String> {
-       val game = key?.let { Game(it, genre, name, score, description, uid) }
+        val game = key?.let { Game(it, genre, name, score, description, uid) }
         val gameValues = game?.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        if(!gameValues.isNullOrEmpty()) {
+        if (!gameValues.isNullOrEmpty()) {
             childUpdates["/Games/$key"] = gameValues
         }
+            return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
+                return@Continuation key
+            })
+    }
 
-        return _db!!.updateChildren(childUpdates).continueWith(Continuation<Void, String>{
+    fun deleteGame(key: String): Task<String> {
+        return _db!!.child("/Games/$key").removeValue().continueWith(Continuation<Void, String> {
             return@Continuation key
         })
     }

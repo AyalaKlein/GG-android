@@ -20,6 +20,10 @@ class NewGameViewModel(private val gameRepository: GameRepository): ViewModel() 
         return gameRepository.updateGame(key, genre, name, score, description, uid)
     }
 
+    fun deleteGame(key: String): Task<String> {
+        return gameRepository.deleteGame(key)
+    }
+
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
         return gameRepository.saveComment(gameId, text, uid)
     }
