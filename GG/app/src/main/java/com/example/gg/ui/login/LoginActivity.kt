@@ -17,7 +17,9 @@ import android.widget.*
 import com.example.gg.R
 import com.example.gg.data.Result
 import com.example.gg.ui.main.MainActivity
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel

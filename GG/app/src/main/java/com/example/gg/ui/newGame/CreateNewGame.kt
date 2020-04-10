@@ -6,9 +6,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -32,6 +31,7 @@ class CreateNewGame : AppCompatActivity() {
     private lateinit var gameScore: TextInputLayout
     private lateinit var gameDesc: TextInputLayout
     private lateinit var saveButton: Button
+    private lateinit var loader: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +57,7 @@ class CreateNewGame : AppCompatActivity() {
         gameScore = findViewById<TextInputLayout>(R.id.game_score)
         gameDesc = findViewById<TextInputLayout>(R.id.game_desc)
         saveButton = findViewById<Button>(R.id.save_game)
+        loader = findViewById<ProgressBar>(R.id.createGameLoader)
 
         gameName.editText!!.afterTextChanged {
             checkFormValid()
@@ -73,6 +74,8 @@ class CreateNewGame : AppCompatActivity() {
         gameDesc.editText!!.afterTextChanged {
             checkFormValid()
         }
+
+        loader.visibility = View.GONE
     }
 
     @InternalCoroutinesApi
@@ -113,17 +116,21 @@ class CreateNewGame : AppCompatActivity() {
 
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
         if (checkFormValid()) {
+            loader.visibility = View.VISIBLE
             newGameViewModel.createGame(genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid)
                 .addOnCompleteListener {
                     newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray())
                         .addOnSuccessListener {
+                            loader.visibility = View.GONE
+                            Toast.makeText(applicationContext, "The game was created successfully!", Toast.LENGTH_LONG)
                             val intent = Intent(applicationContext, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
                 }.addOnFailureListener {
-                // error not good
-            }
+                    loader.visibility = View.GONE
+                    Toast.makeText(applicationContext, "Error while saving the game", Toast.LENGTH_LONG)
+                }
         }
     }
 }
