@@ -19,14 +19,17 @@ import com.example.gg.R
 import com.example.gg.R.drawable.ic_launcher_background
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
+import com.example.gg.data.sync.SyncManager
 import com.example.gg.ui.gameDetails.GameDetails
 import com.example.gg.ui.newGame.CreateNewGame
 import kotlinx.android.synthetic.main.activity_game.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.ByteArrayOutputStream
 
 
+@ObsoleteCoroutinesApi
 @InternalCoroutinesApi
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -46,15 +49,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             gamesList.sortByDescending { it.id }
-            adapter = GameAdapter(this, gamesList, mainViewModel)
+            adapter = GameAdapter(this, gamesList)
 
             gvGames.adapter = adapter
             findViewById<ProgressBar>(R.id.gamesLoad).visibility = View.GONE
 
-            val lv = findViewById<GridView>(R.id.gvGames)
             val searchView = findViewById<SearchView>(R.id.gSearch)
-
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            val listener = object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     val filterGames = ArrayList<Game>()
@@ -65,16 +66,16 @@ class MainActivity : AppCompatActivity() {
                     }
                     adapter!!.gameList = filterGames
                     gvGames.adapter = adapter
-                    return false                }
+                    return false
+                }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
                     return false
                 }
 
-            })
+            }
 
-
-
+            searchView.setOnQueryTextListener(listener)
         }
 
         mainViewModel  = ViewModelProviders.of(this, MainViewModelFactory(applicationContext) {
@@ -82,11 +83,17 @@ class MainActivity : AppCompatActivity() {
             afterLoad()
         }).get(MainViewModel::class.java)
 
+        games = mainViewModel.getGames()
+        afterLoad()
 
         fab.setOnClickListener { view ->
             val intent = Intent(view.context, CreateNewGame::class.java)
             startActivity(intent)
             finish()
+        }
+
+        refresh.setOnClickListener {
+            mainViewModel.syncGames()
         }
     }
 
@@ -94,12 +101,10 @@ class MainActivity : AppCompatActivity() {
     class GameAdapter : BaseAdapter {
         var gameList = ArrayList<Game>()
         var context: Context? = null
-        var imageRetriever: ImageRetriever? = null
 
-        constructor(context: Context, gameList: ArrayList<Game>, imageRetriever: ImageRetriever) : super() {
+        constructor(context: Context, gameList: ArrayList<Game>) : super() {
             this.context = context
             this.gameList = gameList
-            this.imageRetriever = imageRetriever
         }
 
         override fun getCount(): Int {
@@ -145,13 +150,7 @@ class MainActivity : AppCompatActivity() {
 
             listener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
                 imgFood.removeOnLayoutChangeListener(listener!!)
-                imageRetriever!!.getImageUrl(game.id).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        setSelectedImageByteArray(imgFood, it.result!!)
-                    } else {
-                        imgFood.setImageResource(ic_launcher_background)
-                    }
-                }
+                game.gameImage?.let { setSelectedImageByteArray(imgFood, it) }
             }
             imgFood.addOnLayoutChangeListener(listener)
 
@@ -165,7 +164,6 @@ class MainActivity : AppCompatActivity() {
 
                 val intent = Intent(context,GameDetails::class.java)
                 intent.putExtra("sGame", game)
-                intent.putExtra("sImage", getSelectedImageByteArray(imgFood))
 
                 context!!.startActivity(intent)
                 Toast.makeText(context, "You Clicked: " + v.tvName.text,Toast.LENGTH_SHORT).show()

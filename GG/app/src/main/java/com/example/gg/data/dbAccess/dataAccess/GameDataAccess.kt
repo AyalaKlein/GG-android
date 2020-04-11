@@ -1,63 +1,102 @@
 package com.example.gg.data.dbAccess.dataAccess
 
 import android.content.Context
+import android.content.ContextWrapper
 import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.dbAccess.AppDatabase
+import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.data.model.ModelStatus
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.io.File
 
 @InternalCoroutinesApi
 class GameDataAccess(val context: Context) {
-    private var offlineGames: MutableList<Game> = mutableListOf<Game>()
+    private var gameDao = AppDatabase.getDatabase(context).gameDao()
 
     fun getGames(): MutableList<Game> {
-        return this.offlineGames.filter { currGame -> currGame.status != ModelStatus.DELETED.ordinal }.toMutableList()
+        val games = gameDao.getDisplayGames()
+        val wrapper = ContextWrapper(context)
+        val dir = wrapper.getDir("images", Context.MODE_PRIVATE)
+
+        for (currGame in games) {
+            currGame.Comments = HashMap()
+            currGame.listComments!!.forEach {
+                currGame.Comments!![it.id] = it
+            }
+
+            val imageFile = File(dir,"${currGame.id}.jpg")
+            currGame.gameImage = imageFile.readBytes()
+        }
+
+        return games.toMutableList()
     }
 
     fun setGames(games: MutableList<Game>) {
-        this.offlineGames = games
+        gameDao.deleteAll()
+
+        val wrapper = ContextWrapper(context)
+        val dir = wrapper.getDir("images", Context.MODE_PRIVATE)
+
+        for (currGame in games) {
+            currGame.status = ModelStatus.NO_CHANGE.ordinal
+            currGame.listComments = currGame.Comments!!.values.toList()
+
+            val imageFile = File(dir,"${currGame.id}.jpg")
+            imageFile.writeBytes(currGame.gameImage!!)
+        }
+
+        gameDao.insert(games)
     }
 
     fun createGame(game: Game): Task<String> {
-        AppDatabase.getDatabase(context).gameDao().insert(game)
-        this.offlineGames.add(game)
-//        callback?.let { it(Unit) }
+        game.status = ModelStatus.CREATED.ordinal
+
+        val wrapper = ContextWrapper(context)
+        val dir = wrapper.getDir("images", Context.MODE_PRIVATE)
+        val imageFile = File(dir,"${game.id}.jpg")
+        imageFile.writeBytes(game.gameImage!!)
+
+        gameDao.insert(game)
+
         return Tasks.call {
             return@call game.id
         }
     }
 
     fun updateGame(game: Game): Task<String> {
-        AppDatabase.getDatabase(context).gameDao().insert(game)
+        if (game.status == ModelStatus.NO_CHANGE.ordinal)
+            game.status = ModelStatus.UPDATED.ordinal
 
-        for (index in 0 until this.offlineGames.size) {
-            val currGame = this.offlineGames[index]
-            if (currGame.id === game.id) {
-                this.offlineGames[index] = currGame.copy(genre = game.genre, description = game.description, name = game.name, score = game.score)
-                break
-            }
-        }
-//
-//        callback?.let { it(Unit) }
+        val wrapper = ContextWrapper(context)
+        val dir = wrapper.getDir("images", Context.MODE_PRIVATE)
+        val imageFile = File(dir,"${game.id}.jpg")
+        imageFile.writeBytes(game.gameImage!!)
+
+        gameDao.insert(game)
+
         return Tasks.call {
             return@call game.id
         }
     }
 
-    fun deleteGame(key: String): Task<String> {
-        for (index in 0 until this.offlineGames.size) {
-            val currGame = this.offlineGames[index]
-            if (currGame.id === key) {
-                this.offlineGames[index].status = ModelStatus.DELETED.ordinal
-                break
-            }
+    fun deleteGame(game: Game): Task<String> {
+        val wrapper = ContextWrapper(context)
+        val dir = wrapper.getDir("images", Context.MODE_PRIVATE)
+        val imageFile = File(dir,"${game.id}.jpg")
+        imageFile.delete()
+
+        if (game.status == ModelStatus.CREATED.ordinal) {
+            gameDao.delete(game)
+        } else {
+            game.status = ModelStatus.DELETED.ordinal
+            gameDao.insert(game)
         }
 
         return Tasks.call {
-            return@call key
+            return@call game.id
         }
     }
 }

@@ -15,8 +15,10 @@ import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
 import kotlinx.android.synthetic.main.activity_edit_game.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@ObsoleteCoroutinesApi
 @InternalCoroutinesApi
 @Suppress("DEPRECATION")
 class EditGame : AppCompatActivity() {
@@ -30,7 +32,7 @@ class EditGame : AppCompatActivity() {
         game_genre.editText?.setText(intent.getStringExtra("sGenre"))
         game_score.editText?.setText(intent.getStringExtra("sScore"))
         game_desc.editText?.setText(intent.getStringExtra("sDesc"))
-        val gameId: String = intent.getStringExtra("sId")
+        val gameId: String = intent.getStringExtra("sId")!!
 
         val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -76,14 +78,15 @@ class EditGame : AppCompatActivity() {
     }
 
     private fun updateGame(key: String, genre: String, name: String, score: Int, description: String) {
-        newGameViewModel.updateGame(key, genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid).addOnCompleteListener {
-            newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray()).addOnSuccessListener {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
+        newGameViewModel.updateGame(key, genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid, getSelectedImageByteArray()).addOnCompleteListener {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }.addOnFailureListener {
             // error not good
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
