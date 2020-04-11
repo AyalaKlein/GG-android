@@ -70,9 +70,9 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun syncGames() {
-        SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
-            ?.addOnSuccessListener {
-                print("lol")
-            }
+//        SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
+//            ?.addOnSuccessListener {
+//                print("lol")
+//            }
     }
 }
