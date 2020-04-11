@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.gg.ui.editGame
 
 import android.content.Intent
