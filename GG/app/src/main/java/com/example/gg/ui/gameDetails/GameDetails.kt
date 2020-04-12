@@ -31,9 +31,11 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.activity_game_details.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.ByteArrayOutputStream
 
 
+@ObsoleteCoroutinesApi
 @InternalCoroutinesApi
 @Suppress("DEPRECATION")
 class GameDetails : AppCompatActivity() {
@@ -41,7 +43,7 @@ class GameDetails : AppCompatActivity() {
     private lateinit var newGameViewModel: NewGameViewModel
 
     private val commentsList = ArrayList<Comment>()
-    var adapter: CommentAdapter? = null
+    private var adapter: CommentAdapter? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -78,7 +80,7 @@ class GameDetails : AppCompatActivity() {
 
         val sId = sGame.id
         var userId = sGame.userId
-        val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
+        val byteArray: ByteArray = sGame.gameImage!!
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         val image =
             findViewById<ImageView>(R.id.gdImage)
@@ -103,8 +105,8 @@ class GameDetails : AppCompatActivity() {
 
 
             bDelete.visibility = View.VISIBLE
-            bDelete.setOnClickListener { view ->
-                deleteGame(sId)
+            bDelete.setOnClickListener {
+                deleteGame(sGame)
             }
 
         }
@@ -136,8 +138,8 @@ class GameDetails : AppCompatActivity() {
         return baos.toByteArray()
     }
     
-    private fun deleteGame(key: String) {
-        newGameViewModel.deleteGame(key).addOnCompleteListener {
+    private fun deleteGame(game: Game) {
+        newGameViewModel.deleteGame(game).addOnCompleteListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
                 Toast.makeText(applicationContext, "Your Game Removed Successfully",Toast.LENGTH_SHORT).show()

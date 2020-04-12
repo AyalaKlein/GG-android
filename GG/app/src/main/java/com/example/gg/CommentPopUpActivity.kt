@@ -25,7 +25,9 @@ import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
 import kotlinx.android.synthetic.main.activity_comment_pop_up.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 
+@ObsoleteCoroutinesApi
 @InternalCoroutinesApi
 class CommentPopUpActivity : AppCompatActivity() {
     private var popupButton = ""
@@ -76,13 +78,11 @@ class CommentPopUpActivity : AppCompatActivity() {
             ).start()
 
 
-            var game = intent.getSerializableExtra("sGame") as Game
-            val byteArray: ByteArray = intent.getByteArrayExtra("sImage")!!
+            val game = intent.getSerializableExtra("sGame") as Game
             popup_window_button.setOnClickListener {
                 saveComment(game.id)
                 val intent = Intent(applicationContext, GameDetails::class.java)
-                intent.putExtra("sGame",game)
-                intent.putExtra("sImage", byteArray)
+                intent.putExtra("sGame", game)
                 intent.putExtra("newComm", popup_window_text.editText?.text.toString())
                 startActivity(intent)
                 onBackPressed()

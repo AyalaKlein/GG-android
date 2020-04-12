@@ -1,5 +1,6 @@
 package com.example.gg.ui.newGame
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -19,8 +20,10 @@ import com.example.gg.ui.main.MainActivity
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_create_new_game.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.ByteArrayOutputStream
 
+@ObsoleteCoroutinesApi
 @InternalCoroutinesApi
 class CreateNewGame : AppCompatActivity() {
 
@@ -120,19 +123,17 @@ class CreateNewGame : AppCompatActivity() {
         return baos.toByteArray()
     }
 
+    @SuppressLint("ShowToast")
     private fun writeNewGame(genre: String, name: String, score: Int, description: String) {
         if (checkFormValid()) {
             loader.visibility = View.VISIBLE
-            newGameViewModel.createGame(genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid)
+            newGameViewModel.createGame(genre, name, score, description, FireBaseDataSource.Auth.currentUser!!.uid, getSelectedImageByteArray())
                 .addOnCompleteListener {
-                    newGameViewModel.saveImage(it.result!!, getSelectedImageByteArray())
-                        .addOnSuccessListener {
-                            loader.visibility = View.GONE
-                            Toast.makeText(applicationContext, "The game was created successfully!", Toast.LENGTH_LONG)
-                            val intent = Intent(applicationContext, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
+                    loader.visibility = View.GONE
+                    Toast.makeText(applicationContext, "The game was created successfully!", Toast.LENGTH_LONG)
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }.addOnFailureListener {
                     loader.visibility = View.GONE
                     Toast.makeText(applicationContext, "Error while saving the game", Toast.LENGTH_LONG)
