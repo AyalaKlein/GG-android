@@ -5,8 +5,8 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/action_favorite"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/action_favorite"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/log_out"
         app:showAsAction="always"/>
 
 </menu>

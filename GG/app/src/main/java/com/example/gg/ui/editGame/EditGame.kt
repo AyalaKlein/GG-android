@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
@@ -24,6 +25,12 @@ import java.io.ByteArrayOutputStream
 class EditGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_game)

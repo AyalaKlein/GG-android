@@ -21,5 +21,6 @@
     <string name="emScore">No Score</string>
     <string name="emDesc">No Description</string>
     <string name="game_comm">Comments</string>
+    <string name="log_out">Log Out</string>
 </resources>
 
