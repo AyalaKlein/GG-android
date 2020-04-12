@@ -6,9 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -23,6 +21,9 @@ import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.ui.editGame.EditGame
+import com.example.gg.ui.login.LoginActivity
+import com.example.gg.ui.login.LoginViewModel
+import com.example.gg.ui.login.LoginViewModelFactory
 import com.example.gg.ui.main.MainActivity
 import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
@@ -41,8 +42,14 @@ class GameDetails : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
 
+    private lateinit var loginViewModel: LoginViewModel
     private val commentsList = ArrayList<Comment>()
     private var adapter: CommentAdapter? = null
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +149,29 @@ class GameDetails : AppCompatActivity() {
             // error not good
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
+        R.id.action_favorite -> {
+            loginViewModel  = ViewModelProviders.of(this, LoginViewModelFactory())
+                .get(LoginViewModel::class.java)
+            loginViewModel.logout()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.
+            FLAG_ACTIVITY_CLEAR_TASK.
+            or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+            true
+
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
 }
 
     class CommentAdapter : BaseAdapter {
@@ -175,4 +205,5 @@ class GameDetails : AppCompatActivity() {
             commentView.userName.text = comment.user
             return commentView
         }
+
     }
