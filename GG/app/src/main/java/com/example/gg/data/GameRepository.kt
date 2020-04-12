@@ -81,6 +81,8 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun syncGames() {
-        SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
+        if (checkConnection()) {
+            SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
+        }
     }
 }
