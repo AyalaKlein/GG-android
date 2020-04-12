@@ -12,33 +12,21 @@ import kotlinx.coroutines.InternalCoroutinesApi
 class GameSyncing(private val localDB: AppDatabase, private val gameDataSource: GameDataSource) {
 
     private val gameDao: GameDao = localDB.gameDao()
-    fun syncGames(): Task<HashMap<String, String>> {
+    fun syncGames(): Task<MutableList<Task<*>>>? {
         val gamesToSync = gameDao.getAll()
-
-        val idMapping = HashMap<String, String>()
+        val tasks = mutableListOf<Task<String>>()
 
         for (currGame in gamesToSync) {
-            when(ModelStatus.valueOf(currGame.status.toString())) {
-                ModelStatus.CREATED -> {
-                    val newKey = gameDataSource.generateGameKey()
-                    idMapping[currGame.id] = newKey
-                    currGame.id = newKey
-
-                    gameDataSource.createGame(currGame)
-                }
-                ModelStatus.UPDATED -> {
-                    idMapping[currGame.id] = currGame.id
-
-                    gameDataSource.updateGame(currGame)
+            when(ModelStatus.fromInt(currGame.status)) {
+                ModelStatus.CREATED, ModelStatus.UPDATED -> {
+                    tasks.add(gameDataSource.createGame(currGame))
                 }
                 ModelStatus.DELETED -> {
-                    gameDataSource.deleteGame(currGame.id)
+                    tasks.add(gameDataSource.deleteGame(currGame.id))
                 }
             }
         }
 
-        return Tasks.call {
-            return@call idMapping
-        }
+        return Tasks.whenAllComplete(tasks)
     }
 }

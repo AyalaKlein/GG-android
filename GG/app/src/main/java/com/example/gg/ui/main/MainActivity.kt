@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     var adapter: GameAdapter? = null
-    var gamesList = ArrayList<Game>()
+    var gamesList = arrayListOf<Game>()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         @RequiresApi(Build.VERSION_CODES.P)
         fun afterLoad() {
+            gamesList = arrayListOf()
             games?.forEach {
                 gamesList.add(it)
             }

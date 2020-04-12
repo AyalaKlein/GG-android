@@ -27,7 +27,10 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
             val tasks = mutableListOf<Task<ByteArray?>>()
             _games.forEach {game ->
                 tasks.add(getImageUrl(game.id).addOnCompleteListener {
-                    game.gameImage = it.result
+                    if (it.isSuccessful)
+                        game.gameImage = it.result
+                    else
+                        game.gameImage = byteArrayOf()
                 })
             }
 
@@ -58,19 +61,6 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
     }
 
     fun createGame(game: Game): Task<String> {
-        val gameValues = game.toMap()
-
-        val childUpdates = HashMap<String, Any>()
-        if (!gameValues.isNullOrEmpty()) {
-            childUpdates["/Games/${game.id}"] = gameValues
-        }
-
-        return FireBaseDataSource.DbRef.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
-            return@Continuation saveImage(game.id, game.gameImage!!).result
-        })
-    }
-
-    fun updateGame(game: Game): Task<String> {
         val gameValues = game.toMap()
 
         val childUpdates = HashMap<String, Any>()

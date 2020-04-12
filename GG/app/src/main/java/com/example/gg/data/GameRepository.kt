@@ -5,6 +5,7 @@ import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.dataSource.GameDataSource
 import com.example.gg.data.dbAccess.dataAccess.CommentDataAccess
 import com.example.gg.data.dbAccess.dataAccess.GameDataAccess
+import com.example.gg.data.internetConnection.AppInternetConnection
 import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.data.model.ModelStatus
@@ -21,10 +22,15 @@ class GameRepository(private val dataSource: GameDataSource, private val context
 
     private val gameLocalDB = GameDataAccess(context)
     private val commentLocalDB = CommentDataAccess(context)
+    private val internetTest = AppInternetConnection(context)
+
+    private fun checkConnection(): Boolean {
+        return FireBaseDataSource.IsConnected && internetTest.isConnected()
+    }
 
     fun getGames(): MutableList<Game> {
         val games: MutableList<Game>
-        if (FireBaseDataSource.IsConnected) {
+        if (checkConnection()) {
             games = dataSource.getGames()
             gameLocalDB.setGames(games)
         } else {
@@ -35,10 +41,10 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun createGame(genre: String, name: String, score: Int, description: String, uid: String, image: ByteArray): Task<String> {
-        val key: String = (if (FireBaseDataSource.IsConnected) dataSource.generateGameKey() else UUID.randomUUID()).toString()
+        val key: String = (if (checkConnection()) dataSource.generateGameKey() else UUID.randomUUID()).toString()
         val game = Game(key, genre, name, score, description, uid, ModelStatus.CREATED.ordinal, gameImage = image)
 
-        return if (FireBaseDataSource.IsConnected) {
+        return if (checkConnection()) {
             dataSource.createGame(game)
         } else {
             gameLocalDB.createGame(game)
@@ -48,15 +54,15 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     fun updateGame(key: String, genre: String, name: String, score: Int, description: String, uid: String, image: ByteArray): Task<String> {
         val game = Game(key, genre, name, score, description, uid, ModelStatus.UPDATED.ordinal, gameImage = image)
 
-        return if (FireBaseDataSource.IsConnected) {
-            dataSource.updateGame(game)
+        return if (checkConnection()) {
+            dataSource.createGame(game)
         } else {
             gameLocalDB.updateGame(game)
         }
     }
 
     fun deleteGame(game: Game): Task<String> {
-        return if (FireBaseDataSource.IsConnected) {
+        return if (checkConnection()) {
             dataSource.deleteGame(game.id)
         } else {
             gameLocalDB.deleteGame(game)
@@ -64,10 +70,10 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
-        val key: String = (if (FireBaseDataSource.IsConnected) dataSource.generateCommentKey(gameId) else UUID.randomUUID()).toString()
+        val key: String = (if (checkConnection()) dataSource.generateCommentKey(gameId) else UUID.randomUUID()).toString()
         val comment = Comment(key, gameId, text, uid)
 
-        return if (FireBaseDataSource.IsConnected) {
+        return if (checkConnection()) {
             dataSource.saveComment(comment)
         } else {
             commentLocalDB.createComment(comment)
@@ -75,9 +81,6 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun syncGames() {
-//        SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
-//            ?.addOnSuccessListener {
-//                print("lol")
-//            }
+        SyncManager.syncLocalDB(context = context, gameDataSource = dataSource)
     }
 }

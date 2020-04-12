@@ -11,20 +11,17 @@ abstract class SyncManager {
     @ObsoleteCoroutinesApi
     @InternalCoroutinesApi
     companion object {
-        fun syncLocalDB(context: Context, gameDataSource: GameDataSource): Task<Void>? {
+        fun syncLocalDB(context: Context, gameDataSource: GameDataSource) {
             gameDataSource.disableGameList()
             val scope = CoroutineScope(newFixedThreadPoolContext(1, "synchronizationPool"))
             scope.launch {
                 val localDB = AppDatabase.getDatabase(context)
-//                val gameDao: GameDao = localDB.gameDao()
-//                val commentDao: CommentDao = localDB.commentDao()
-//                val imageDao: ImageDao = localDB.imageDao()
 
-                val ids = GameSyncing(localDB, gameDataSource).syncGames()
-                gameDataSource.initGameList()
+                val tasks = GameSyncing(localDB, gameDataSource).syncGames()
+                tasks!!.addOnCompleteListener {
+                    gameDataSource.initGameList()
+                }
             }
-
-            return null
         }
     }
 }
