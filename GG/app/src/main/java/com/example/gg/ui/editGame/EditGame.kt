@@ -9,10 +9,14 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProviders
 import com.example.gg.R
 import com.example.gg.data.dataSource.FireBaseDataSource
+import com.example.gg.ui.login.LoginActivity
+import com.example.gg.ui.login.LoginViewModel
+import com.example.gg.ui.login.LoginViewModelFactory
 import com.example.gg.ui.main.MainActivity
 import com.example.gg.ui.newGame.NewGameViewModel
 import com.example.gg.ui.newGame.NewGameViewModelFactory
@@ -28,6 +32,7 @@ class EditGame : AppCompatActivity() {
 
     private lateinit var newGameViewModel: NewGameViewModel
 
+    private lateinit var loginViewModel: LoginViewModel
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -96,6 +101,29 @@ class EditGame : AppCompatActivity() {
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
+        R.id.action_favorite -> {
+            loginViewModel  = ViewModelProviders.of(this, LoginViewModelFactory())
+                .get(LoginViewModel::class.java)
+            loginViewModel.logout()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.
+            FLAG_ACTIVITY_CLEAR_TASK.
+            or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+            true
+
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
         }
     }
 }
