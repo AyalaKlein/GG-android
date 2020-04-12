@@ -90,12 +90,12 @@ class CommentPopUpActivity : AppCompatActivity() {
     }
 
     private fun saveComment(gameId: String) {
-            newGameViewModel.saveComment(gameId, popup_window_text.editText?.text.toString(), FireBaseDataSource.Auth.currentUser!!.email.toString()).addOnCompleteListener {
-                Toast.makeText(applicationContext, "You Comment Saved",Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                // error not good
-            }
+        newGameViewModel.saveComment(gameId, popup_window_text.editText?.text.toString(), FireBaseDataSource.Auth.currentUser!!.email.toString()).addOnCompleteListener {
+            Toast.makeText(applicationContext, "You Comment Saved",Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            // error not good
         }
+    }
 
     override fun onBackPressed() {
 

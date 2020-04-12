@@ -3,7 +3,9 @@ package com.example.gg.data
 import android.content.Context
 import com.example.gg.data.dataSource.FireBaseDataSource
 import com.example.gg.data.dataSource.GameDataSource
+import com.example.gg.data.dbAccess.dataAccess.CommentDataAccess
 import com.example.gg.data.dbAccess.dataAccess.GameDataAccess
+import com.example.gg.data.model.Comment
 import com.example.gg.data.model.Game
 import com.example.gg.data.model.ModelStatus
 import com.example.gg.data.sync.SyncManager
@@ -18,6 +20,7 @@ import java.util.*
 class GameRepository(private val dataSource: GameDataSource, private val context: Context) {
 
     private val gameLocalDB = GameDataAccess(context)
+    private val commentLocalDB = CommentDataAccess(context)
 
     fun getGames(): MutableList<Game> {
         val games: MutableList<Game>
@@ -61,12 +64,14 @@ class GameRepository(private val dataSource: GameDataSource, private val context
     }
 
     fun saveComment(gameId: String, text: String, uid: String): Task<String> {
-//        return if (FireBaseDataSource.IsConnected) {
-//
-//        } else {
-//            commentLocalDB.saveComment(gameId, text, uid)
-//        }
-        return dataSource.saveComment(gameId, text, uid)
+        val key: String = (if (FireBaseDataSource.IsConnected) dataSource.generateCommentKey(gameId) else UUID.randomUUID()).toString()
+        val comment = Comment(key, gameId, text, uid)
+
+        return if (FireBaseDataSource.IsConnected) {
+            dataSource.saveComment(comment)
+        } else {
+            commentLocalDB.createComment(comment)
+        }
     }
 
     fun syncGames() {

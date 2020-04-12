@@ -120,7 +120,7 @@ class GameDetails : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        }
+    }
 
     private fun getSelectedImageByteArray(image: ImageView): ByteArray {
         image.isDrawingCacheEnabled = true

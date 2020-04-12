@@ -87,18 +87,19 @@ class GameDataSource(val callback: ((Unit) -> Unit)?) {
         return FireBaseDataSource.DbRef.child(_tableName).push().key.toString()
     }
 
-    fun saveComment(gameId: String, text: String, uid: String): Task<String> {
-        val key: String = FireBaseDataSource.DbRef.child("Games/$gameId/Comments").push().key.toString()
-        val comment = Comment(key, gameId, text, uid)
+    fun generateCommentKey(gameId: String): String {
+        return FireBaseDataSource.DbRef.child("Games/$gameId/Comments").push().key.toString()
+    }
 
+    fun saveComment(comment: Comment): Task<String> {
         val commentValues = comment.toMap()
         val childUpdates = HashMap<String, Any>()
         if (!commentValues.isNullOrEmpty()) {
-            childUpdates["/Games/$gameId/Comments/$key"] = commentValues
+            childUpdates["/Games/${comment.gameId}/Comments/${comment.id}"] = commentValues
         }
 
         return FireBaseDataSource.DbRef.updateChildren(childUpdates).continueWith(Continuation<Void, String> {
-            return@Continuation key
+            return@Continuation comment.id
         })
     }
 
